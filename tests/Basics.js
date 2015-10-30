@@ -64,6 +64,7 @@ define([
 
     console.clear();
 
+    
     var actions = [],
         thiz = this,
         ACTION_TYPE = types.ACTION,
@@ -623,10 +624,10 @@ define([
         onContentChange:function(){
 
         },
-        getDefaultOptions:function(){
+        getDefaultOptions:function(value,mixin){
 
             var thiz = this;
-            return {
+            return utils.mixin({
                 region: "center",
                 /*value: value,*/
                 style: "margin: 0; padding: 0; position:relative;overflow: auto;height:inherit;width:inherit;text-align:left;",
@@ -642,8 +643,8 @@ define([
                 //className: 'editor-ace ace_editor',
                 fileName:'none',
                 mode:'javascript',
-                value:this.value || 'No value',
-                theme:'cloud9_night',
+                value:value || this.value || 'No value',
+                theme:'ambiance',
                 splits:1,
                 aceOptions: {
                     enableBasicAutocompletion: true,
@@ -657,7 +658,7 @@ define([
                 onPrefsChanged: function () {
                     thiz.setPreferences();
                 }
-            };
+            },mixin || {});
         },
         getEditor:function(index){
 
@@ -667,14 +668,19 @@ define([
                 return this.editor;
             }
         },
-        resize:function(){
+        _resizeDebounced:null,
+        resize:function(what,target){
+            function _resize() {
+                var editor = this.getEditor(),
+                    widget = this.split || this.editor;
 
-            var self = this;
-            var editor = this.getEditor();
-            editor && utils.resizeTo(editor.container,this.domNode,true,true);
-            if(self.split){
-                self.split.resize();
+                editor && utils.resizeTo(what || editor.container, target || this.domNode, true, true);
+
+                return widget ? widget.resize() : null;
+
             }
+
+            return this.debounce('resize',_resize.bind(this),this.options.resizeDelay || 2000);
 
         },
         getAce:function(){
@@ -794,13 +800,14 @@ define([
             //
 
             var node = options.targetNode  ||  domConstruct.create('div');
-            domStyle.set(node, {
+            $(node).css({
                 padding: "0",
                 margin: "0",
                 height:'100%',
-                width:'100%',
-                "className": "editor-ace ace_editor ace-codebox-dark ace_dark"
+                width:'100%'
+                //"className": "editor-ace ace_editor ace-codebox-dark ace_dark"
             });
+
 
             this.domNode.appendChild(node);
 
@@ -825,7 +832,7 @@ define([
 
                 this.editor = editor = split.getEditor(0);
                 this.editorSession = this.editor.getSession();
-                container = editor.container;
+                //container = editor.container;
                 //utils.resizeTo(container,this.domNode);
                 //split && split.resize();
                 split && split.setSplits(options.splits);
