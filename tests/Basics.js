@@ -476,12 +476,15 @@ define([
 
                 var thiz = this,
                     editor = this.getEditor();
+
+
                 if (!_loadedModes[mode]) {
 
                     var modeFile = null;
 
                     var aceRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.ACE);
                     if (!aceRoot) {
+
                         var webRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
 
                         if (has('debug') === true) {
@@ -493,7 +496,6 @@ define([
                     } else {
                         modeFile = aceRoot + '/mode-' + mode + '.js';
                     }
-
 
                     this.loadScript(modeFile, null, function () {
                         _loadedModes[mode] = true;//update cache
@@ -516,7 +518,7 @@ define([
 
             if(editor && session) {
 
-                console.log('set ace option ' + key,value);
+                //console.log('set ace option ' + key,value);
 
                 var node = editor.container;
 
@@ -539,9 +541,7 @@ define([
                     try {
                         if (has('host-browser')) {
                             ace.require(["ace/mode/" + value], function (modeModule) {
-                                console.error('set mode ' + value);
                                 if (modeModule && modeModule.Mode) {
-
                                     self.split.$editors.forEach(function (editor) {
                                         editor.session.setMode(new modeModule.Mode());
                                     });
@@ -600,7 +600,6 @@ define([
 
             this.options = options;
 
-
             _.each(options,function(value,name){
                 this.set(name,value);
             },this);
@@ -614,6 +613,7 @@ define([
                     enableSnippets: true,
                     enableLiveAutocompletion: true
                 });
+                this.setMode(options.mode);
             }
             return this.options;
         },
@@ -670,7 +670,8 @@ define([
         resize:function(){
 
             var self = this;
-
+            var editor = this.getEditor();
+            editor && utils.resizeTo(editor.container,this.domNode,true,true);
             if(self.split){
                 self.split.resize();
             }
@@ -756,23 +757,12 @@ define([
             this.addBasicCommands(editor);
             //this.set('value','javascript2 ');
 
-            //this.setMode(options.mode);
-
-
-
-
         },
         destroy:function(){
 
             this.inherited(arguments);
-
-
             var editor = this.getEditor();
-
             editor && editor.destroy();
-
-
-
         },
         createEditor:function(_options,value){
 
@@ -796,17 +786,12 @@ define([
 
             options.mode = this._getMode(options.fileName);
 
-            console.log('create editor with options! ' + options.mode,options);
-
-
+            //console.log('create editor with options! ' + options.mode,options);
             ///////////////////////////////////////////////////////////////////
             //
             //  DOM & ACE
             //
             //
-
-
-
 
             var node = options.targetNode  ||  domConstruct.create('div');
             domStyle.set(node, {
@@ -852,80 +837,67 @@ define([
             //console.log('split',this.split);
             //console.log('editor',this.editor);
 
-            //this.resize();
-
 
             this.setOptions(options);
-
             this.onEditorCreated(editor,options);
-
             return editor;
-
-            //var editorPane = new TextEditor(_options, dojo.doc.createElement('div'));
-
-            //this.containerNode.appendChild(editorPane.domNode);
-
-            //editorPane.startup();
-
-            //editorPane.delegate = this;
-
-            this.aceEditor = editorPane;
+            {
+                this.aceEditor = editorPane;
 
 
-            this.aceEditor.setOptions();
-            this.aceEditor.getEditor().$blockScrolling = true;
-            this.getAce().setFontSize(settings.fontSize);
+                this.aceEditor.setOptions();
+                this.aceEditor.getEditor().$blockScrolling = true;
+                this.getAce().setFontSize(settings.fontSize);
 
-            if (editorPane.split) {
-                editorPane.split.$fontSize = settings.fontSize;
+                if (editorPane.split) {
+                    editorPane.split.$fontSize = settings.fontSize;
+                }
+
+                this.addCommands();
+                this.addExtras();
+
+                setTimeout(function () {
+                    thiz.setMode(mode);
+                    thiz.setTheme(thiz.defaultTheme);
+                }, 10);
+
+
+                if (this.statusbar) {
+                    this.createStatusBar();
+                }
+
+                if (this.hasMaximize) {
+                    this.addKeyboardListerner('ctrl f11', this.keyPressDefault(), null, this, function () {
+                        thiz.maximize();
+                    }, this.getAce().container);
+                }
+
+                if (this.hasSave) {
+                    var params = {
+                        prevent_repeat: false,
+                        prevent_default: true,
+                        is_unordered: false,
+                        is_counting: false,
+                        is_exclusive: true,
+                        is_solitary: false,
+                        is_sequence: true
+                    };
+                    this.addKeyboardListerner('ctrl s', params, null, this, function () {
+                        thiz.saveContent();
+                    }, this.domNode);
+                }
+
+                this.setValue(value);
             }
-
-            this.addCommands();
-            this.addExtras();
-
-            setTimeout(function () {
-                thiz.setMode(mode);
-                thiz.setTheme(thiz.defaultTheme);
-            }, 10);
-
-
-
-            if (this.statusbar) {
-                this.createStatusBar();
-            }
-
-            if(this.hasMaximize) {
-                this.addKeyboardListerner('ctrl f11',this.keyPressDefault(),null,this,function(){
-                    thiz.maximize();
-                },this.getAce().container);
-            }
-
-            if(this.hasSave) {
-                var params = {
-                    prevent_repeat: false,
-                    prevent_default: true,
-                    is_unordered: false,
-                    is_counting: false,
-                    is_exclusive: true,
-                    is_solitary: false,
-                    is_sequence: true
-                };
-                this.addKeyboardListerner('ctrl s',params,null,this,function(){
-                    thiz.saveContent();
-                },this.domNode);
-            }
-
-            this.setValue(value);
-
         }
     });
+
 
     function createACEBaseClass(){
 
 
         return declare('ACEBASE',[TemplatedWidgetBase,EditorInterfaceImplementation],{
             templateString:'<div style="width: 100%;height: 100%" class="AceEditorPane"></div>',
-            resize:function(){},
             _getMode: function (fileName) {
 
                 fileName = fileName || this.fileName;
