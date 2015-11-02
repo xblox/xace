@@ -69,6 +69,18 @@ define([
 
 ){
 
+
+    console.clear();
+
+    var EDITOR_SETTINGS = 'Editor/Settings',
+        INCREASE_FONT_SIZE = 'View/Increase Font Size',
+        DECREASE_FONT_SIZE = 'View/Decrease Font Size',
+        EDITOR_HELP = 'Help/Editor Shortcuts',
+        EDITOR_THEMES = 'View/Themes',
+        SNIPPETS = 'Editor/Snippets',
+        EDITOR_CONSOLE = 'Editor/Console';
+
+
     /**
      *
      * @returns {*}
@@ -147,14 +159,56 @@ define([
 
         var self = this,
             command = action.command,
-
+            ACTION = types.ACTION,
             editor = this.getEditor();
 
 
 
         switch (command) {
-            case 'Help/Editor Shortcuts':{
+            case EDITOR_HELP:{
                 self.showHelp();
+                break;
+            }
+            case ACTION.FIND:{
+
+                var net = ace.require("ace/lib/net");
+                var webRoot = this.getWebRoot();
+                var sb = editor.searchBox;
+                function _search(sb){
+                    sb.show(editor.session.getTextRange(), null);
+                }
+
+                if(sb){
+                    _search(sb);
+                }else {
+                    net.loadScript(webRoot + '/xfile/ext/ace2/ext-searchbox.js', function (what) {
+                        var sbm = ace.require("ace/ext/searchbox");
+                        _search(new sbm.SearchBox(editor));
+                    });
+                }
+                break;
+            }
+        }
+
+        //themes
+        if(command.indexOf(EDITOR_THEMES)!=-1){
+            self.set('theme',action.theme);
+        }
+
+
+        if(command.indexOf(EDITOR_SETTINGS)!=-1){
+
+            var option = editor.getOption(action.option),
+                isBoolean = _.isBoolean(option);
+
+            if(option==null){
+                console.error('option does not exists! ' + action.option);
+            }
+
+            if(isBoolean){
+                editor.setOption(action.option,!option);
+            }else{
+                editor.setOption(action.option,false);
             }
         }
 
@@ -192,62 +246,64 @@ define([
         }));
 
         actions.push(this.createAction({
+            label:'Find',
+            command:ACTION.FIND,
+            icon:ICON.SEARCH,
+            keycombo:'ctrl f'
+        }));
+
+
+        actions.push(this.createAction({
             label:'Increase Fontsize',
-            command:'View/Increase Font Size',
+            command:INCREASE_FONT_SIZE,
             icon:'fa-text-height'
         }));
 
         actions.push(this.createAction({
             label:'Decrease Fontsize',
-            command:'View/Decrease Font Size',
+            command:DECREASE_FONT_SIZE,
             icon:'fa-text-height'
         }));
 
         actions.push(this.createAction({
             label:'Themes',
-            command:'View/Themes',
+            command:EDITOR_THEMES,
             icon:'fa-paint-brush'
         }));
 
         this._addThemes(actions);
 
-
-
         actions.push(this.createAction({
             label:'Help',
-            command:'Help/Editor Shortcuts',
+            command:EDITOR_HELP,
             icon:'fa-question',
             keycombo:'f1'
         }));
 
 
         actions.push(this.createAction({
-            label:'Help',
-            command:'Editor/Snippets',
+            label:'Snippets',
+            command:SNIPPETS,
             icon:'fa-paper-plane'
         }));
 
         actions.push(this.createAction({
-            label:'Help',
-            command:'Editor/Console',
+            label:'Console',
+            command:EDITOR_CONSOLE,
             icon:'fa-terminal'
         }));
 
 
         ///editor settings
-
         actions.push(this.createAction({
             label:'Settings',
-            command:'Editor/Settings',
+            command:EDITOR_SETTINGS,
             icon:'fa-cogs'
         }));
 
-
-
-
         function _createSettings(label,command,icon,option,value,mixin){
 
-            command = command || 'Editor/Settings/' + label;
+            command = command || EDITOR_SETTINGS + '/' + label;
 
             mixin = mixin || {};
 
@@ -255,17 +311,32 @@ define([
                 label:label,
                 command:command,
                 icon: icon || 'fa-cogs',
-                option:option,
                 value:value,
                 mixin:utils.mixin({
                     addPermission:true,
-                    isACEOption:true
+                    isACEOption:true,
+                    option:option
                 },mixin)
             }));
 
         }
 
         _createSettings('Show Gutters',null,null,'showGutter',true);
+        _createSettings('Show Print Margin',null,null,'printMargin',true);
+        _createSettings('Display Intend Guides',null,null,'displayIndentGuides',true);
+        _createSettings('Show Line Numbers',null,null,'showLineNumbers',true);
+
+        _createSettings('Show Invisibles',null,null,'showInvisibles',true);
+
+        _createSettings('Use Soft Tabs',null,null,'useSoftTabs',true);
+
+        //_createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops',true);
+
+        _createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops',true);
+
+
+        _createSettings('Animated Scroll',null,null,'animatedScroll',true);
+
 
 
 
@@ -336,7 +407,6 @@ define([
                 runAction:function(action){
                     return runAction.apply(this,[action]);
                 },
-
                 getThemeData: function () {
                     return [
                         ["Chrome"],
@@ -375,6 +445,10 @@ define([
                         ["Vibrant Ink", "vibrant_ink", "dark"]
                     ];
                 },
+                getWebRoot: function () {
+                    var webRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
+                    return webRoot;
+                },
                 _addThemes: function (actions) {
 
                     var themes = this.getThemeData(),
@@ -383,16 +457,29 @@ define([
                     var creatorFn = function (label, icon, value) {
 
                         //console.log('add theme: label = '+label +' | value = ' + value);
-                        var _theme = Action.create(label, icon, 'View/Themes/' + label, false, null, 'TEXT', 'Appearance', null, false, function () {
+
+                        /*
+                        var _theme = Action.create(label, icon, EDITOR_THEMES + '/' + label, false, null, 'TEXT', 'Appearance', null, false, function () {
                             thiz.setTheme(value);
                         },{
                             tab:'Home'
+                        });
+                        */
+
+                        var _theme = thiz.createAction({
+                            label:label,
+                            command:EDITOR_THEMES + '/' + label,
+                            mixin:{
+                                addPermission:true,
+                                theme:value
+                            }
                         });
                         return _theme;
                     };
 
                     //clean and complete theme data
                     var aceThemes = [];
+
                     for (var i = 0; i < themes.length; i++) {
                         var data = themes[i];
 
@@ -405,6 +492,7 @@ define([
                 permissions:[
                     ACTION.RELOAD,
                     ACTION.SAVE,
+                    ACTION.FIND,
                     'View/Increase Font Size',
                     'View/Decrease Font Size',
                     'View/Themes',
