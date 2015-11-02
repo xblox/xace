@@ -79,7 +79,8 @@ define([
         EDITOR_THEMES = 'View/Themes',
         SNIPPETS = 'Editor/Snippets',
         EDITOR_CONSOLE = 'Editor/Console',
-        KEYBOARD = 'Editor/Keyboard';
+        KEYBOARD = 'Editor/Keyboard',
+        ACTION = types.ACTION;
 
 
 
@@ -145,9 +146,7 @@ define([
 
     function doEditorTests(editor){
 
-        editor.showToolbar(true);
-
-
+        //editor.showToolbar(false);
         //ctx.getWindowManager().registerView(editor,true);
 
     }
@@ -237,8 +236,6 @@ define([
     }
 
     function getActions(permissions){
-
-
 
         var actions = [],
             self = this,
@@ -381,10 +378,10 @@ define([
 
     function createEditorClass(){
 
-        var ACTION = types.ACTION;
 
 
-        var _class = declare('Editor',[Editor,Toolbar], {
+
+        var _class = declare('Editor',[Editor],{
 
                 addCommands: function () {
 
@@ -525,26 +522,8 @@ define([
 
                     }
                 },
-                permissions:[
-                    ACTION.RELOAD,
-                    ACTION.SAVE,
-                    ACTION.FIND,
-                    KEYBOARD,
-                    INCREASE_FONT_SIZE,
-                    DECREASE_FONT_SIZE,
-                    EDITOR_THEMES,
-                    'Help/Editor Shortcuts',
-                    SNIPPETS,
-                    EDITOR_CONSOLE,
-                    EDITOR_SETTINGS
-                ],
-
-                //////////////////////////////////////////////////////////////////
-                //
-                //
-                //
                 templateString: '<div data-dojo-attach-point="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden;position: relative;padding: 0px;margin: 0px">' +
-                '<div data-dojo-attach-point="header" class="view-header row" style="height: 30px;"></div>' +
+                '<div data-dojo-attach-point="header" class="view-header row" style="height: auto;"></div>' +
                 '<div data-dojo-attach-point="aceNode" class="view-body row" style="height:100%;width: 100%;position: absolute;top:0;left: 0;"></div>' +
                 '<div data-dojo-attach-point="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
                 '</div>',
@@ -559,19 +538,16 @@ define([
                         topOffset = 0,
                         aceNode = $(this.aceNode);
 
-                    if(toolbar && toolbar.isEmpty()){
-                        $(thiz.header).css('display','none');
+                    if(!toolbar ||  (toolbar && toolbar.isEmpty())){
+                        //$(thiz.header).css('display','none');
                         noToolbar = true;
                     }else{
-
                         if(toolbar) {
                             var $toolbar = $(toolbar.domNode);
                             var bottom = $toolbar.position().top + $toolbar.outerHeight(true);
                             topOffset = bottom;
                         }
                     }
-
-
 
                     var totalHeight = $(thiz.domNode).height();
 
@@ -580,8 +556,6 @@ define([
                     var footerHeight = $(thiz.footer).height();
 
                     var finalHeight = totalHeight - topHeight - footerHeight;
-
-                    finalHeight-=5;
 
 
 
@@ -599,8 +573,9 @@ define([
                 },
                 startup:function(){
 
-
-                    this.inherited(arguments);
+                    if(this._started){
+                        return;
+                    }
 
                     if (this.permissions) {
                         var _defaultActions = DefaultActions.getDefaultActions(this.permissions, this,this);
@@ -608,11 +583,7 @@ define([
                         this.addActions(_defaultActions);
                     }
 
-
-                    var toolbar  = this.getToolbar();
-                    if(toolbar){
-
-                    }
+                    this.inherited(arguments);
 
                 }
 
@@ -632,16 +603,37 @@ define([
 
 
 
+
     function doTests(){
+
 
         var tab = TestUtils.createTab('ACE-TEST',null,module.id);
 
+        //createEditorClass()||
+        var _class = Editor;
+
+
         var editor = createACE(tab,{
             toolbarInitiallyHidden:true,
+            permissions:[
+                ACTION.RELOAD,
+                ACTION.SAVE,
+                ACTION.FIND,
+                KEYBOARD,
+                INCREASE_FONT_SIZE,
+                DECREASE_FONT_SIZE,
+                EDITOR_THEMES,
+                'Help/Editor Shortcuts',
+                SNIPPETS,
+                EDITOR_CONSOLE,
+                ACTION.TOOLBAR,
+                EDITOR_SETTINGS
+            ],
             options:{
                 fileName:'test.js'
             }
-        },createEditorClass(),'blab balsdfasdf');
+        },_class,'blab balsdfasdf');
+
 
         setTimeout(function(){
             doEditorTests(editor);

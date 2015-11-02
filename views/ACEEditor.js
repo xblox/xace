@@ -426,8 +426,10 @@ define([
                 var editor = this.getEditor(),
                     widget = this.split || this.editor;
 
-                if(!this.aceNode || !editor.container){
+                if( !editor || !this.aceNode || !editor.container){
                     console.error('invalid DOM! ' + this.id + ' ' + this.value);
+                    this['resize_debounced'].cancel();
+                    this['resize_debounced']=null;
                     return;
                 }
 
@@ -436,6 +438,9 @@ define([
                 return widget ? widget.resize() : null;
 
             }
+
+
+            //_resize.bind(this);
 
             return this.debounce('resize',_resize.bind(this),this.options.resizeDelay || 600);
 
@@ -543,7 +548,7 @@ define([
             var settings = this.getPreferences ? this.getPreferences() : {},
                 thiz = this;
 
-            var options = this.getDefaultOptions();
+            var options = this.getDefaultOptions(value);
 
             //apply overrides
             utils.mixin(options,_options);
@@ -667,7 +672,28 @@ define([
      *
      */
     var EditorClass = declare('xace/views/ACE',null,{
+        onLoaded:function(){
+            this.set('iconClass', this.iconClassNormal);
+        },
+        /**
+         * getContent reads the remote file's content and passes it onto onSuccess
+         * @param item
+         * @param onSuccess
+         */
+        getContent:function(item,onSuccess){
 
+            var thiz=this;
+            this.set('iconClass', this.loadingIcon);
+            var _ready = function(content){
+                thiz.onLoaded();
+                onSuccess(content);
+            };
+            this.ctx.getFileManager().getContent(item.mount,item.path,_ready);
+        },
+
+        saveContent:function(value,item,onSuccess,onError){
+            this.ctx.getFileManager().setContent(item.mount,item.path,value,onSuccess);
+        },
         startup: function () {
 
 
@@ -683,25 +709,31 @@ define([
             this.inherited(arguments);
 
 
-            var self = this;
+            var self = this,
+                options = this.options || {};
 
             function createEditor(options,value){
                 self.createEditor(self.options || options,value);
             }
 
+
             if (this.value) {
                 createEditor(null,this.value);
             } else {
+
                 //we have no content yet, call in _TextEditor::getContent, this will be forwarded
                 //to our 'storeDelegate'
                 this.getContent(
+                    this.item,
                     function (content) {//onSuccess
                         //thiz.set('iconClass', thiz.iconClassNormal);//
                         self.lastSavedContent = content;
                         createEditor(options,content);
                     },
-                    function (error) {//onError
+                    function (e) {//onError
+
                         createEditor(null,'');
+                        logError(e,'error loading content from file');
                     }
                 );
             }
