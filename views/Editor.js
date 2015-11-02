@@ -100,6 +100,60 @@ define([
             '<div data-dojo-attach-point="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
             '</div>',
 
+            getContent:function(item,onSuccess,onError){
+
+                if(!this.storeDelegate){
+
+                    onError && onError('Editor::getContent : Have no store delegate!');
+                }else{
+                    var _cb=function(content){
+                        onSuccess(content);
+                    };
+
+                    this.storeDelegate.getContent(_cb,item||this.item);
+                }
+            },
+            saveContent:function(value,onSuccess,onError){
+
+                var thiz=this;
+
+                this.set('iconClass', 'fa-spinner fa-spin');
+
+                var _value = value || this.get('value');
+                if(!_value){
+                    console.log('Editor::saveContent : Have nothing to save, editor seems empty');
+                }
+                if(!this.storeDelegate){
+                    if(onError){
+                        onError('Editor::saveContent : Have no store delegate!');
+                    }
+                }else{
+                    var _s = function(){
+
+                        thiz.set('iconClass',thiz.iconClassNormal);
+
+                        thiz.lastSavedContent=_value;
+
+                        thiz.onContentChange(false);
+
+                        /*
+                        if(onSuccess){
+                            onSuccess(arguments);
+                        }
+                        */
+
+                        var struct = {
+                            path:thiz.options.filePath,
+                            item:thiz.item,
+                            content:_value,
+                            editor:thiz
+                        };
+
+                        thiz.publish(types.EVENTS.ON_FILE_CONTENT_CHANGED,struct,thiz);
+                    };
+                    return this.storeDelegate.saveContent(_value,_s,null,thiz.item);
+                }
+            },
 
             addCommands: function () {
 

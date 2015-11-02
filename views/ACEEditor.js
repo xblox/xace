@@ -418,7 +418,6 @@ define([
             }
         },
         resize:function(what,target){
-
             function _resize() {
 
                 this.inherited('resize',[what,target]);
@@ -676,7 +675,7 @@ define([
          * @param item
          * @param onSuccess
          */
-        getContent:function(item,onSuccess){
+        __getContent:function(item,onSuccess){
 
             var thiz=this;
             this.set('iconClass', this.loadingIcon);
@@ -687,9 +686,10 @@ define([
             this.ctx.getFileManager().getContent(item.mount,item.path,_ready);
         },
 
-        saveContent:function(value,item,onSuccess,onError){
+        __saveContent:function(value,item,onSuccess,onError){
             this.ctx.getFileManager().setContent(item.mount,item.path,value,onSuccess);
         },
+
         startup: function () {
 
 

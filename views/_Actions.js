@@ -91,6 +91,9 @@ define([
                 EDITOR_CONSOLE,
                 EDITOR_SETTINGS
             ],
+            save: function (item) {
+                return this.saveContent(this.get('value'),item);
+            },
             runAction:function(action){
 
                 action  = this.getAction(action);
@@ -108,6 +111,10 @@ define([
                 switch (command) {
                     case EDITOR_HELP:{
                         self.showHelp();
+                        break;
+                    }
+                    case ACTION.SAVE:{
+                        self.save(this.item);
                         break;
                     }
                     case ACTION.FIND:{
