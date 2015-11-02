@@ -68,7 +68,25 @@ define([
         EDITOR_THEMES = 'View/Themes',
         SNIPPETS = 'Editor/Snippets',
         EDITOR_CONSOLE = 'Editor/Console',
-        KEYBOARD = 'Editor/Keyboard';
+        KEYBOARD = 'Editor/Keyboard',
+
+        DEFAULT_PERMISSIONS = [
+
+            ACTION.RELOAD,
+            ACTION.SAVE,
+            ACTION.FIND,
+            ACTION.TOOLBAR,
+            KEYBOARD,
+            INCREASE_FONT_SIZE,
+            DECREASE_FONT_SIZE,
+            EDITOR_THEMES,
+            'Help/Editor Shortcuts',
+            SNIPPETS,
+            EDITOR_CONSOLE,
+            EDITOR_SETTINGS,
+            ACTION.MAXIMIZE
+
+        ];
 
 
     /**
@@ -77,21 +95,7 @@ define([
      */
     var Module = declare('xace/views/Editor',[ACEEditor,Toolbar,ActionProvider],
         {
-            permissions:[
-                ACTION.RELOAD,
-                ACTION.SAVE,
-                ACTION.FIND,
-                ACTION.TOOLBAR,
-                KEYBOARD,
-                INCREASE_FONT_SIZE,
-                DECREASE_FONT_SIZE,
-                EDITOR_THEMES,
-                'Help/Editor Shortcuts',
-                SNIPPETS,
-                EDITOR_CONSOLE,
-                EDITOR_SETTINGS,
-                ACTION.MAXIMIZE
-            ],
+            permissions:DEFAULT_PERMISSIONS,
             onMaximized:function(maximized){
 
                 var toolbar = this.getToolbar();
@@ -513,6 +517,7 @@ define([
     );
 
 
+    Module.DEFAULT_PERMISSIONS = DEFAULT_PERMISSIONS;
 
     return Module;
 

@@ -1,88 +1,26 @@
 /** @module xgrid/Base **/
 define([
     "xdojo/declare",
-    'dojo/dom-class',
-    'dojo/dom-construct',
     'xide/types',
     'xide/utils',
-    'xgrid/ListRenderer',
-    'xgrid/TreeRenderer',
-    'xgrid/ThumbRenderer',
-    'xide/views/_ActionMixin',
     'xgrid/Grid',
-    'xgrid/MultiRenderer',
-    'dijit/form/RadioButton',
-    'xide/widgets/Ribbon',
-    'xide/editor/Registry',
-    'xide/action/DefaultActions',
-    'xide/bean/Action',
-    "xblox/widgets/BlockGridRowEditor",
-    'dgrid/Editor',
-    'xgrid/Defaults',
-    'xgrid/Layout',
-    'xgrid/Focus',
-    'dgrid/OnDemandGrid',
-    'xide/mixins/EventedMixin',
     'xide/factory',
-    'dijit/Menu',
-    'xgrid/data/Reference',
-    'dijit/form/DropDownButton',
-    'dijit/MenuItem',
-    'xdocker/Docker2',
     "xide/views/CIViewMixin",
     'xide/layout/TabContainer',
-    "dojo/has!host-browser?xblox/views/BlockEditDialog",
-    'xblox/views/BlockGrid',
-    'xgrid/DnD',
-    'xblox/views/BlocksGridDndSource',
-    'xblox/widgets/DojoDndMixin',
-    'dijit/registry',
-    'dojo/topic',
 
     'xide/views/CIGroupedSettingsView',
     'xide/widgets/WidgetBase',
-
-    'xide/views/_LayoutMixin',
-
-    'xcf/model/Command',
-    'xcf/model/Variable',
-
-    'xide/widgets/ToggleButton',
-    'xide/widgets/_ActionValueWidgetMixin',
-
-    'xide/layout/AccordionContainer',
-    "dojo/store/Memory",
-
-    "xide/widgets/TemplatedWidgetBase",
-
-
-    "dijit/form/TextBox",
-    "dijit/form/CheckBox",
-    'dijit/form/ValidationTextBox',
-
     'xide/tests/TestUtils',
-    'xide/views/CIActionDialog',
     'xace/views/ACEEditor',
+    'xace/views/Editor',
     'module'
 
 
-], function (declare, domClass,domConstruct,types,
-             utils, ListRenderer, TreeRenderer, ThumbRenderer,
-             _ActionMixin,
-             Grid, MultiRenderer, RadioButton, Ribbon, Registry, DefaultActions,                 Action,BlockGridRowEditor,
-             Editor,Defaults, Layout, Focus,
-             OnDemandGrid, EventedMixin, factory,Menu,Reference,DropDownButton,
-             MenuItem,Docker,CIViewMixin,TabContainer,
+], function (declare, types,
+             utils, Grid, factory,CIViewMixin,TabContainer,
 
-             BlockEditDialog,
-             BlockGrid,
-             Dnd,BlocksGridDndSource,DojoDndMixin,registry,topic,
              CIGroupedSettingsView,
-             WidgetBase,_LayoutMixin,Command,Variable,
-             ToggleButton,_ActionValueWidgetMixin,AccordionContainer,Memory,
-             TemplatedWidgetBase,
-
-             TextBox, CheckBox, ValidationTextBox,TestUtils,CIActionDialog,ACEEditor,module
+             WidgetBase,TestUtils,ACEEditor,Editor,module
 
     ) {
 
@@ -131,7 +69,7 @@ define([
                     "enabled": true,
                     "enumType": "-1",
                     "flags": -1,
-                    "group": 'General',
+                    "group": 'General2',
                     "id": "CF_DRIVER_CLASS",
                     "name": "CF_DRIVER_CLASS",
                     "order": 1,
@@ -147,6 +85,7 @@ define([
                 }
             ]
         };
+
         _.each(CIS.inputs,function(ci){
             ci.driver=driver;
             ci.actionTarget=actionTarget;
@@ -386,7 +325,7 @@ define([
                     },
                     fileName:'bla.js'
                 };
-                var editor = utils.addWidget(ACEEditor,args,this,parentNode,true,null,null,true);
+                var editor = utils.addWidget(Editor,args,this,parentNode,true,null,null,true);
                 return editor;
             },
             getAceNode: function () {

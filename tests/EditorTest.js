@@ -421,9 +421,7 @@ define([
 
 
                     this.splitMode = mode;
-
                     if (!this.doSplit) {
-
                         if (mode == 'Diff') {
                             this.doDiff();
                             return;
@@ -432,7 +430,6 @@ define([
                         var isSplit = mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL || mode == types.VIEW_SPLIT_MODE.SPLIT_VERTICAL;
                         var _ed = this.getEditor();
                         var sp = this.split;
-
                         if (isSplit) {
 
                             var newEditor = (sp.getSplits() == 1);
@@ -443,7 +440,6 @@ define([
                                 var newSession = sp.setSession(session, 1);
                                 newSession.name = session.name;
                                 var options = _ed.getOptions();
-
                                 sp.getEditor(1).setOptions(options);
 
 
@@ -452,8 +448,6 @@ define([
                             sp.setSplits(1);
                             this.onSingleView();
                         }
-                    } else {
-
                     }
 
                 },

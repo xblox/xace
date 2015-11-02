@@ -199,7 +199,8 @@ define([
         }
     );
 
-
+    //pass through defaults
+    Module.DEFAULT_PERMISSIONS = _Actions.DEFAULT_PERMISSIONS;
 
     return Module;
 
