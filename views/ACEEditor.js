@@ -1,51 +1,16 @@
 define([
     "dojo/_base/declare",
-    "dojo/_base/lang",
-    'dojo/_base/connect',
     'dojo/has',
-    'dojo/dom-class',
     'dojo/dom-construct',
-    'dojo/dom-geometry',
     'dojo/dom-style',
-    'xide/layout/ContentPane',
-    'xide/views/_EditorBase',
-    'xide/views/TextEditor',
     'xide/utils',
     'xide/types',
-    'xide/factory',
-    'xide/widgets/ActionSelectWidget',
-    'dijit/MenuItem',
-    "dojo/cookie",
-    'xide/bean/Action',
-    'xide/mixins/ReloadMixin',
-    'xide/mixins/ActionProvider',
-    'xide/views/SplitViewMixin',
-    'dojo/Deferred',
-    './AceDiff',
-    "dojo/window", // winUtils.getBox winUtils.scrollIntoView
-    'xide/Keyboard',
-    'xide/widgets/ActionToolbar',
-    'dijit/CheckedMenuItem',
-    './_AceMultiDocs',
-
-    'dijit/form/CheckBox',
-    'xide/widgets/ActionValueWidget',
-    'xide/widgets/_ActionValueWidgetMixin',
     'xide/widgets/TemplatedWidgetBase',
-    './_Split',
-    'dojo/has!ace-formatters?xide/editor/ace/formatters'
+    './_Split'
 
 
-], function (declare, lang,connect,has, domClass, domConstruct,
-             domGeometry, domStyle, ContentPane, _EditorBase, TextEditor,
-             utils, types, factory, ActionSelectWidget,
-             MenuItem, cookie, Action, ReloadMixin,ActionProvider,
-             SplitViewMixin, Deferred, AceDiff, winUtils,
-             Keyboard,ActionToolbar,CheckedMenuItem,_AceMultiDocs,
-             CheckBox,
-             ActionValueWidget,_ActionValueWidgetMixin,
-             TemplatedWidgetBase,Splitter,
-             formatters)
+], function (declare, has, domConstruct,
+             domStyle, utils, types, TemplatedWidgetBase,Splitter)
 {
 
     var _loadedModes = {};//global cache for loaded modes
@@ -660,7 +625,6 @@ define([
                 this.setValue(value);
             }
         }
-
     });
 
     /**
@@ -670,26 +634,6 @@ define([
         onLoaded:function(){
             this.set('iconClass', this.iconClassNormal);
         },
-        /**
-         * getContent reads the remote file's content and passes it onto onSuccess
-         * @param item
-         * @param onSuccess
-         */
-        __getContent:function(item,onSuccess){
-
-            var thiz=this;
-            this.set('iconClass', this.loadingIcon);
-            var _ready = function(content){
-                thiz.onLoaded();
-                onSuccess(content);
-            };
-            this.ctx.getFileManager().getContent(item.mount,item.path,_ready);
-        },
-
-        __saveContent:function(value,item,onSuccess,onError){
-            this.ctx.getFileManager().setContent(item.mount,item.path,value,onSuccess);
-        },
-
         startup: function () {
 
 

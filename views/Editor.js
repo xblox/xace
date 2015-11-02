@@ -1,76 +1,18 @@
 /** @module xace/views/Editor **/
 define([
     "dojo/_base/declare",
-    "dojo/_base/lang",
-    'dojo/_base/connect',
-    'dojo/has',
-    'dojo/dom-class',
-    'dojo/dom-construct',
-    'dojo/dom-geometry',
-    'dojo/dom-style',
-    'xide/layout/ContentPane',
-    'xide/views/_EditorBase',
-    'xide/views/TextEditor',
-    'xide/utils',
     'xide/types',
-    'xide/factory',
-    'xide/widgets/ActionSelectWidget',
-    'dijit/MenuItem',
-    "dojo/cookie",
-    'xide/bean/Action',
-    'xide/mixins/ReloadMixin',
     'xide/mixins/ActionProvider',
-    'xide/views/SplitViewMixin',
-    'dojo/Deferred',
-    './AceDiff',
-    "dojo/window", // winUtils.getBox winUtils.scrollIntoView
-    'xide/Keyboard',
-    'xide/widgets/ActionToolbar',
-    'dijit/CheckedMenuItem',
-    './_AceMultiDocs',
-
-    'dijit/form/CheckBox',
-    'xide/widgets/ActionValueWidget',
-    'xide/widgets/_ActionValueWidgetMixin',
-    'xide/widgets/TemplatedWidgetBase',
-    './_Split',
-
     './ACEEditor',
     './_Actions',
-
-    'xide/action/Toolbar',
-    'xide/action/DefaultActions',
+    'xide/action/Toolbar'
 
 
-    'dojo/has!ace-formatters?xide/editor/ace/formatters'
+], function (declare, types, ActionProvider,
+             ACEEditor,
 
-
-], function (declare, lang,connect,has, domClass, domConstruct,
-             domGeometry, domStyle, ContentPane, _EditorBase, TextEditor,
-             utils, types, factory, ActionSelectWidget,
-             MenuItem, cookie, Action, ReloadMixin,ActionProvider,
-             SplitViewMixin, Deferred, AceDiff, winUtils,
-             Keyboard,ActionToolbar,CheckedMenuItem,_AceMultiDocs,
-             CheckBox,
-             ActionValueWidget,_ActionValueWidgetMixin,
-             TemplatedWidgetBase,Splitter,ACEEditor,
-
-             _Actions,Toolbar,DefaultActions,
-
-             formatters)
+             _Actions,Toolbar)
 {
-
-
-    var ACTION = types.ACTION,
-        EDITOR_SETTINGS = 'Editor/Settings',
-        INCREASE_FONT_SIZE = 'View/Increase Font Size',
-        DECREASE_FONT_SIZE = 'View/Decrease Font Size',
-        EDITOR_HELP = 'Help/Editor Shortcuts',
-        EDITOR_THEMES = 'View/Themes',
-        SNIPPETS = 'Editor/Snippets',
-        EDITOR_CONSOLE = 'Editor/Console',
-        KEYBOARD = 'Editor/Keyboard';
-
 
 
     /**
@@ -242,13 +184,16 @@ define([
 
                 return this.inherited(arguments);
             },
-            startup:function(){
 
-                this.inherited(arguments);
-                var toolbar  = this.getToolbar();
-                if(toolbar){
-
+            set:function(what,value){
+                var _res = this.inherited(arguments);
+                if(what ==='iconClass'){
+                    var _parent = this._parent;
+                    if(_parent && _parent.icon){
+                        this._parent.icon(value);
+                    }
                 }
+                return _res;
             }
 
         }

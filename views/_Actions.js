@@ -89,8 +89,83 @@ define([
                 'Help/Editor Shortcuts',
                 SNIPPETS,
                 EDITOR_CONSOLE,
-                EDITOR_SETTINGS
+                EDITOR_SETTINGS,
+                ACTION.MAXIMIZE
             ],
+            onMaximized:function(maximized){
+
+                var toolbar = this.getToolbar();
+                if(toolbar){
+
+                    if(maximized){
+                        $(toolbar.domNode).addClass('bg-opaque');
+                    }else{
+                        $(toolbar.domNode).removeClass('bg-opaque');
+                    }
+                }
+
+                this.resize();
+                this.publish(types.EVENTS.RESIZE,null,1500);
+
+            },
+            maximize: function () {
+
+
+                var node = this.domNode,
+                    $node = $(node),
+                    thiz = this;
+
+                if(!this._isMaximized) {
+                    var vp = $(this.domNode.ownerDocument);
+                    var root = $('body')[0];
+                    var container = utils.create('div',{
+                        className:'ACEContainer bg-opaque',
+                        style:'z-index:300;height:100%;width:100%'
+                    });
+
+                    this._maximizeContainer=container;
+
+
+                    root.appendChild(container);
+
+                    $(node).addClass('AceEditorPaneFullScreen');
+
+                    $(node).css('width',vp.width());
+                    $(node).css('height',vp.height());
+                    this.resize();
+
+
+                    this._lastParent = node.parentNode;
+                    container.appendChild(node);
+
+
+
+                    $(container).addClass('bg-opaque');
+
+                    $(container).css('width',vp.width());
+                    $(container).css('height',vp.height());
+
+
+                    $(container).css({
+                        position: "absolute",
+                        left: "0px",
+                        top: "0px",
+                        border:'none medium',
+                        width: '100%',
+                        height: '100%'
+                    });
+
+                    this._isMaximized = true;
+
+                }else{
+                    this._isMaximized = false;
+                    $node.removeClass('AceEditorPaneFullScreen');
+                    this._lastParent.appendChild(node);
+                    utils.destroy(this._maximizeContainer);
+                }
+                this.onMaximized(this._isMaximized);
+                return true;
+            },
             save: function (item) {
                 return this.saveContent(this.get('value'),item);
             },
@@ -109,6 +184,9 @@ define([
 
 
                 switch (command) {
+                    case ACTION.MAXIMIZE:{
+                        return this.maximize();
+                    }
                     case EDITOR_HELP:{
                         self.showHelp();
                         break;
@@ -177,7 +255,7 @@ define([
 
                 console.log('run action : ' + action.command);
             },
-            getActions:function(permissions){
+            getActions:function (permissions){
 
     var actions = [],
         self = this,
@@ -198,36 +276,51 @@ define([
         label:'Save',
         command:ACTION.SAVE,
         icon:ICON.SAVE,
-        keycombo:'ctrl s'
+        keycombo:'ctrl s',
+        group:'File'
     }));
 
     actions.push(this.createAction({
         label:'Find',
         command:ACTION.FIND,
         icon:ICON.SEARCH,
-        keycombo:'ctrl f'
+        keycombo:'ctrl f',
+        group:'Search'
     }));
+
+    actions.push(this.createAction({
+        label:'Maximize',
+        command:ACTION.MAXIMIZE,
+        icon:ICON.MAXIMIZE,
+        keycombo:'ctrl f11',
+        group:'View'
+    }));
+
 
 
     actions.push(this.createAction({
         label:'Increase Fontsize',
         command:INCREASE_FONT_SIZE,
-        icon:'fa-text-height'
+        icon:'fa-text-height',
+        group:'View'
     }));
 
     actions.push(this.createAction({
         label:'Decrease Fontsize',
         command:DECREASE_FONT_SIZE,
-        icon:'fa-text-height'
+        icon:'fa-text-height',
+        group:'View'
     }));
 
     actions.push(this.createAction({
         label:'Themes',
         command:EDITOR_THEMES,
-        icon:'fa-paint-brush'
+        icon:'fa-paint-brush',
+        group:'View'
     }));
 
     this._addThemes(actions);
+
 
     actions.push(this.createAction({
         label:'Help',
@@ -240,21 +333,25 @@ define([
     actions.push(this.createAction({
         label:'Snippets',
         command:SNIPPETS,
-        icon:'fa-paper-plane'
+        icon:'fa-paper-plane',
+        group:"Show"
     }));
 
     actions.push(this.createAction({
         label:'Console',
         command:EDITOR_CONSOLE,
-        icon:'fa-terminal'
+        icon:'fa-terminal',
+        group:'Show'
     }));
+
 
 
     ///editor settings
     actions.push(this.createAction({
         label:'Settings',
         command:EDITOR_SETTINGS,
-        icon:'fa-cogs'
+        icon:'fa-cogs',
+        group:"Settings"
     }));
 
     function _createSettings(label,command,icon,option,mixin){
@@ -267,6 +364,7 @@ define([
             label:label,
             command:command,
             icon: icon || 'fa-cogs',
+            group:"Settings",
             mixin:utils.mixin({
                 addPermission:true,
                 option:option
@@ -299,9 +397,10 @@ define([
 
 
     actions.push(this.createAction({
-        label:'Console',
+        label:'Keyboard',
         command:KEYBOARD,
-        icon:'fa-keyboard-o'
+        icon:'fa-keyboard-o',
+        group:"Settings"
     }));
 
     _createSettings('Default',KEYBOARD +'/Default',null,'ace');
@@ -326,6 +425,7 @@ define([
                     return _theme = thiz.createAction({
                         label:label,
                         command:EDITOR_THEMES + '/' + label,
+                        group:'View',
                         mixin:{
                             addPermission:true,
                             theme:value
