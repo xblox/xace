@@ -78,7 +78,9 @@ define([
         EDITOR_HELP = 'Help/Editor Shortcuts',
         EDITOR_THEMES = 'View/Themes',
         SNIPPETS = 'Editor/Snippets',
-        EDITOR_CONSOLE = 'Editor/Console';
+        EDITOR_CONSOLE = 'Editor/Console',
+        KEYBOARD = 'Editor/Keyboard';
+
 
 
     /**
@@ -195,6 +197,21 @@ define([
             self.set('theme',action.theme);
         }
 
+        if(command.indexOf(KEYBOARD)!=-1){
+
+            var option = action.option;
+            debugger;
+
+            var keybindings = {
+                ace: null, // Null = use "default" keymapping
+                vim: ace.require("ace/keyboard/vim").handler,
+                emacs: "ace/keyboard/emacs"
+
+            };
+            editor.setKeyboardHandler(keybindings[action.option]);
+
+        }
+
 
         if(command.indexOf(EDITOR_SETTINGS)!=-1){
 
@@ -234,7 +251,7 @@ define([
             label:'Reload',
             command:ACTION.RELOAD,
             icon:ICON.RELOAD,
-            keycombo:'ctrl l'
+            keycombo:'ctrl r'
         }));
 
 
@@ -301,7 +318,7 @@ define([
             icon:'fa-cogs'
         }));
 
-        function _createSettings(label,command,icon,option,value,mixin){
+        function _createSettings(label,command,icon,option,mixin){
 
             command = command || EDITOR_SETTINGS + '/' + label;
 
@@ -311,32 +328,50 @@ define([
                 label:label,
                 command:command,
                 icon: icon || 'fa-cogs',
-                value:value,
                 mixin:utils.mixin({
                     addPermission:true,
-                    isACEOption:true,
                     option:option
                 },mixin)
             }));
 
         }
 
-        _createSettings('Show Gutters',null,null,'showGutter',true);
-        _createSettings('Show Print Margin',null,null,'printMargin',true);
-        _createSettings('Display Intend Guides',null,null,'displayIndentGuides',true);
-        _createSettings('Show Line Numbers',null,null,'showLineNumbers',true);
+        _createSettings('Show Gutters',null,null,'showGutter');
+        _createSettings('Show Print Margin',null,null,'printMargin');
+        _createSettings('Display Intend Guides',null,null,'displayIndentGuides');
+        _createSettings('Show Line Numbers',null,null,'showLineNumbers');
 
-        _createSettings('Show Invisibles',null,null,'showInvisibles',true);
+        _createSettings('Show Invisibles',null,null,'showInvisibles');
 
-        _createSettings('Use Soft Tabs',null,null,'useSoftTabs',true);
+        _createSettings('Use Soft Tabs',null,null,'useSoftTabs');
 
-        //_createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops',true);
+        _createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops');
+        _createSettings('Animated Scroll',null,null,'animatedScroll');
 
-        _createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops',true);
+
+        /*
+        var keybindings = {
+            ace: null, // Null = use "default" keymapping
+            vim: ace.require("ace/keyboard/vim").handler,
+            emacs: "ace/keyboard/emacs"
+        };
+*/
 
 
-        _createSettings('Animated Scroll',null,null,'animatedScroll',true);
 
+        actions.push(this.createAction({
+            label:'Console',
+            command:KEYBOARD,
+            icon:'fa-keyboard-o'
+        }));
+
+        _createSettings('Default',KEYBOARD +'/Default',null,'ace');
+        _createSettings('Vim',KEYBOARD +'/Vim',null,'vim');
+        _createSettings('EMacs',KEYBOARD +'/EMacs',null,'emacs');
+
+
+
+        //keybindings
 
 
 
@@ -347,6 +382,7 @@ define([
     function createEditorClass(){
 
         var ACTION = types.ACTION;
+
 
         var _class = declare('Editor',[Editor,Toolbar], {
 
@@ -493,13 +529,14 @@ define([
                     ACTION.RELOAD,
                     ACTION.SAVE,
                     ACTION.FIND,
-                    'View/Increase Font Size',
-                    'View/Decrease Font Size',
-                    'View/Themes',
+                    KEYBOARD,
+                    INCREASE_FONT_SIZE,
+                    DECREASE_FONT_SIZE,
+                    EDITOR_THEMES,
                     'Help/Editor Shortcuts',
-                    'Editor/Snippets',
-                    'Editor/Console',
-                    'Editor/Settings'
+                    SNIPPETS,
+                    EDITOR_CONSOLE,
+                    EDITOR_SETTINGS
                 ],
 
                 //////////////////////////////////////////////////////////////////
