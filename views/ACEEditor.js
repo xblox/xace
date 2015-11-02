@@ -438,10 +438,6 @@ define([
                 return widget ? widget.resize() : null;
 
             }
-
-
-            //_resize.bind(this);
-
             return this.debounce('resize',_resize.bind(this),this.options.resizeDelay || 600);
 
         },
