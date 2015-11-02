@@ -7,12 +7,15 @@ define([
     "xide/tests/TestUtils",
     "module",
     'xace/views/ACEEditor',
-    'xace/views/Editor'
+    'xace/views/Editor',
+    'dojo/has!ace-formatters?xide/editor/ace/formatters'
 
 ], function (declare,types,utils,factory,
              TestUtils,module,
              ACEEditor,
-             Editor){
+             Editor,
+             formatters){
+
 
 
     console.clear();
@@ -28,6 +31,8 @@ define([
         SNIPPETS = 'Editor/Snippets',
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
+        FORMAT = 'File/Format',
+        LAYOUT = 'View/Layout',
         ACTION = types.ACTION;
 
 
@@ -155,10 +160,12 @@ define([
             self.set('theme',action.theme);
         }
 
+        if(command.indexOf(LAYOUT)!=-1){
+            self.setSplitMode(action.option, null);
+        }
         if(command.indexOf(KEYBOARD)!=-1){
 
             var option = action.option;
-            debugger;
 
             var keybindings = {
                 ace: null, // Null = use "default" keymapping
@@ -235,6 +242,22 @@ define([
             group:'View'
         }));
 
+        actions.push(this.createAction({
+            label:'Undo',
+            command:ACTION.UNDO,
+            icon:ICON.UNDO,
+            keycombo:'ctrl z',
+            group:'Edit'
+        }));
+
+        actions.push(this.createAction({
+            label:'Undo',
+            command:ACTION.REDO,
+            icon:ICON.REDO,
+            keycombo:'ctrl shift z',
+            group:'Edit'
+        }));
+
 
 
         actions.push(this.createAction({
@@ -293,7 +316,7 @@ define([
             group:"Settings"
         }));
 
-        function _createSettings(label,command,icon,option,mixin){
+        function _createSettings(label,command,icon,option,mixin,group){
 
             command = command || EDITOR_SETTINGS + '/' + label;
 
@@ -303,7 +326,7 @@ define([
                 label:label,
                 command:command,
                 icon: icon || 'fa-cogs',
-                group:"Settings",
+                group:group || "Settings",
                 mixin:utils.mixin({
                     addPermission:true,
                     option:option
@@ -346,9 +369,30 @@ define([
         _createSettings('Vim',KEYBOARD +'/Vim',null,'vim');
         _createSettings('EMacs',KEYBOARD +'/EMacs',null,'emacs');
 
+        if(formatters){
+
+            actions.push(this.createAction({
+                label:'Format',
+                command:FORMAT,
+                icon:'fa-indent',
+                group:"Edit"
+
+            }));
+
+            var modes = formatters.modes;
+            for (var _f in modes) {
+                var _label = modes[_f].replace('(JS Beautify)','');
+                actions.push(_createSettings(_label, FORMAT + '/' +_label,null, _f,null,'Edit'));
+            }
+        }
 
 
-        //keybindings
+        //layout
+        actions.push(_createSettings('Layout','View/Layout',null,types.VIEW_SPLIT_MODE.SOURCE,null,'View'));
+        actions.push(_createSettings('Horizontal','View/Layout/Horizontal',null,types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL,null,'View'));
+        actions.push(_createSettings('Vertical','View/Layout/Vertical',null,types.VIEW_SPLIT_MODE.SPLIT_VERTICAL,null,'View'));
+        actions.push(_createSettings('Diff','View/Layout/Diff',null,'Diff',null,'View'));
+
 
 
 
@@ -358,12 +402,59 @@ define([
 
     function createEditorClass(){
 
+
+
+
+
+
         return declare('Editor',Editor,{
 
                 createMaximizedToolbar:false,
                 destroy:function(){
                     this.inherited(arguments);
                     utils.destroy(this._maximizeContainer);
+
+                },
+                onSingleView:function(){},
+
+                setSplitMode: function (mode) {
+
+
+                    this.splitMode = mode;
+
+                    if (!this.doSplit) {
+
+                        if (mode == 'Diff') {
+                            this.doDiff();
+                            return;
+                        }
+
+                        var isSplit = mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL || mode == types.VIEW_SPLIT_MODE.SPLIT_VERTICAL;
+                        var _ed = this.getEditor();
+                        var sp = this.split;
+
+                        if (isSplit) {
+
+                            var newEditor = (sp.getSplits() == 1);
+                            sp.setOrientation(mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL ? sp.BELOW : sp.BESIDE);
+                            sp.setSplits(2);
+                            if (newEditor) {
+                                var session = sp.getEditor(0).session;
+                                var newSession = sp.setSession(session, 1);
+                                newSession.name = session.name;
+                                var options = _ed.getOptions();
+
+                                sp.getEditor(1).setOptions(options);
+
+
+                            }
+                        } else {
+                            sp.setSplits(1);
+                            this.onSingleView();
+                        }
+                    } else {
+
+                    }
 
                 },
                 runAction:function(action){
@@ -393,6 +484,13 @@ define([
 
         var editor = createACE(tab,{
             ctx:ctx,
+            menuOrder: {
+                'File': 110,
+                'Edit': 100,
+                'View': 60,
+                'Help': 50,
+                'Editor': 40
+            },
             permissions:[
                 ACTION.RELOAD,
                 ACTION.SAVE,
@@ -406,7 +504,11 @@ define([
                 SNIPPETS,
                 EDITOR_CONSOLE,
                 ACTION.TOOLBAR,
-                EDITOR_SETTINGS
+                EDITOR_SETTINGS,
+                FORMAT,
+                ACTION.CLIPBOARD,
+                ACTION.UNDO,
+                ACTION.REDO
             ],
             options:{
                 fileName:'test.js'
