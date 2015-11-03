@@ -36,6 +36,9 @@ define([
 
     console.clear();
 
+
+
+
     var actions = [],
         thiz = this,
         ACTION_TYPE = types.ACTION,
@@ -43,6 +46,7 @@ define([
         grid,
         ribbon,
         CIS;
+
 
     function createDriverCIS(driver,actionTarget){
 
@@ -123,7 +127,7 @@ define([
                     "visible": true,
                     "widget":{
                         height:'300px !important',
-                        showBrowser:false
+                        showBrowser:true
                     }
                 }
             ]

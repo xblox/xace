@@ -1,16 +1,13 @@
 define([
-    "dojo/_base/declare",
+    "xdojo/declare",
     'dojo/has',
-    'dojo/dom-construct',
-    'dojo/dom-style',
     'xide/utils',
     'xide/types',
     'xide/widgets/TemplatedWidgetBase',
     './_Split'
 
-
-], function (declare, has, domConstruct,
-             domStyle, utils, types, TemplatedWidgetBase,Splitter)
+], function (declare, has,
+             utils, types, TemplatedWidgetBase,Splitter)
 {
 
     var _loadedModes = {};//global cache for loaded modes
@@ -498,6 +495,9 @@ define([
         createEditor:function(_options,value){
 
             this.set('iconClass', this.iconClassNormal);
+            if(this.editor || this.split){
+                debugger;
+            }
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -517,6 +517,8 @@ define([
 
             options.mode = this._getMode(options.fileName);
 
+
+
             //console.log('create editor with options! ' + options.mode,options);
             ///////////////////////////////////////////////////////////////////
             //
@@ -525,7 +527,7 @@ define([
             //
 
 
-            var node = options.targetNode  ||  domConstruct.create('div');
+            var node = options.targetNode  ||  $('div')[0];
             $(node).css({
                 padding: "0",
                 margin: "0",
@@ -673,6 +675,11 @@ define([
 
             var self = this,
                 options = this.options || {};
+
+            if(!this.item && !this.value){
+                console.error('invalid editor args ');
+                return;
+            }
 
             function createEditor(options,value){
                 self.createEditor(self.options || options,value);
