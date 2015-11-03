@@ -324,8 +324,6 @@ define([
 
 
 
-
-
     function createExpressionWidget(){
 
         return declare("xide.widgets.ExpressionEditor", [WidgetBase,_CacheMixin],{
