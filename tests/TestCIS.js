@@ -34,11 +34,6 @@ define([
     ) {
 
 
-
-
-
-
-
     console.clear();
 
     var actions = [],
@@ -50,6 +45,8 @@ define([
         CIS;
 
     function createDriverCIS(driver,actionTarget){
+
+
 
         var CIS = {
             "inputs": [
@@ -111,7 +108,7 @@ define([
                     "enabled": true,
                     "enumType": "-1",
                     "flags": -1,
-                    "group": 'General1',
+                    "group": 'General12',
                     "id": "CF_DRIVER_CLASS2",
                     "name": "CF_DRIVER_CLASS2",
                     "order": 1,
@@ -125,7 +122,8 @@ define([
                     "value": ".\/Marantz\/MyMarantz.js",
                     "visible": true,
                     "widget":{
-                        height:'300px !important'
+                        height:'300px !important',
+                        showBrowser:false
                     }
                 }
             ]
@@ -142,6 +140,7 @@ define([
     function openDriverSettings(driver){
 
         var toolbar = ctx.mainView.getToolbar();
+
 
 
         CIS = createDriverCIS(driver,toolbar);
@@ -323,17 +322,25 @@ define([
         });
     }
 
+
+
+
+
     function createExpressionWidget(){
+
         return declare("xide.widgets.ExpressionEditor", [WidgetBase,_CacheMixin],{
             /////////////////////////////////////////////////////////////////////////////////////
             //
             //  Variables
             //
             /////////////////////////////////////////////////////////////////////////////////////
-            editorArgs:{},
+            editorArgs:{
+
+            },
             editorOptions:{
                 showGutter:false,
-                mode:'javascript'
+                mode:'javascript',
+                wordWrap:true
             },
             cssClass: 'expressionEditor',
             aceNode: null,
@@ -1024,7 +1031,7 @@ define([
 
                 */
                 this.publish(types.EVENTS.ON_ACE_READY,{
-                    aceEditor:ace,
+                    aceEditor:editor,
                     owner:this
                 });
 
@@ -1254,6 +1261,7 @@ define([
         types.registerWidgetMapping('Expression', createExpressionWidget());
 
         types.registerWidgetMapping(types.ECIType.EXPRESSION_EDITOR, createExpressionWidget());
+
 
 
 

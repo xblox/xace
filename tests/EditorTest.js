@@ -155,6 +155,7 @@ define([
             }
         }
 
+
         //themes
         if(command.indexOf(EDITOR_THEMES)!=-1){
             self.set('theme',action.theme);

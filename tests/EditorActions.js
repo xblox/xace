@@ -16,6 +16,7 @@ define([
 
     console.clear();
 
+
     var EDITOR_SETTINGS = 'Editor/Settings',
         INCREASE_FONT_SIZE = 'View/Increase Font Size',
         DECREASE_FONT_SIZE = 'View/Decrease Font Size',
@@ -25,6 +26,7 @@ define([
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
         ACTION = types.ACTION;
+
 
 
 
@@ -47,8 +49,10 @@ define([
 
         var item = {
             mount:'workspace',
-            path:'./index.css'
+            path:'./index.dhtml'
         };
+
+
 
         var args = {
 
@@ -56,13 +60,8 @@ define([
             delegate:this,
             style:'padding:0px;',
             iconClass:'fa-code',
-            autoSelect:true,
             value:value,
-            ctx:ctx,
-            /***
-             * Provide a text editor store delegate
-             */
-            title:title
+            ctx:ctx
         };
 
         /***
@@ -92,9 +91,6 @@ define([
         return editor;
 
     }
-
-
-
     function doEditorTests(editor){
         //editor.showToolbar(false);
         ctx.getWindowManager().registerView(editor,true);
@@ -110,14 +106,21 @@ define([
         var self = this,
             command = action.command,
             ACTION = types.ACTION,
-            editor = this.getEditor();
-
+            editor = this.getEditor(),
+            session = this.editorSession,
+            ace = this.getAce();
 
 
         switch (command) {
             case EDITOR_HELP:{
                 self.showHelp();
                 break;
+            }
+            case INCREASE_FONT_SIZE:{
+                return editor.setFontSize(editor.getFontSize() - 1);
+            }
+            case DECREASE_FONT_SIZE:{
+                return editor.setFontSize(editor.getFontSize() + 1);
             }
             case ACTION.FIND:{
 
@@ -148,7 +151,7 @@ define([
         if(command.indexOf(KEYBOARD)!=-1){
 
             var option = action.option;
-            debugger;
+
 
             var keybindings = {
                 ace: null, // Null = use "default" keymapping
@@ -161,19 +164,36 @@ define([
         }
 
 
+
         if(command.indexOf(EDITOR_SETTINGS)!=-1){
 
-            var option = editor.getOption(action.option),
+            var key = action.option,
+                option = editor.getOption(action.option),
                 isBoolean = _.isBoolean(option);
+
+
 
             if(option==null){
                 console.error('option does not exists! ' + action.option);
+                option = session.getOption(action.option);
             }
+
 
             if(isBoolean){
                 editor.setOption(action.option,!option);
             }else{
-                editor.setOption(action.option,false);
+
+                if(key==='wrap'){
+                    var mode = session.getUseWrapMode();
+                    this.set('wordWrap',!mode);
+                    return
+                }
+
+                if(option==='off' || option ==='on'){
+                    editor.setOption(key, option ==='off' ? 'on' : 'off' );
+                }else {
+                    editor.setOption(action.option, false);
+                }
             }
         }
 
@@ -301,7 +321,8 @@ define([
 
         _createSettings('Use Soft Tabs',null,null,'useSoftTabs');
 
-        _createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops');
+        //_createSettings('Use Elastic Tab Stops',null,null,'useElasticTabstops');
+        _createSettings('Word Wrap',null,null,'wrap');
         _createSettings('Animated Scroll',null,null,'animatedScroll');
 
 
@@ -384,6 +405,8 @@ define([
             ],
             options:{
                 fileName:'test.js'
+                //showGutter:false,
+
             }
         },_class,null);
 

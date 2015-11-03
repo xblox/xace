@@ -249,7 +249,6 @@ define([
                     session.setUseSoftTabs(value);
                 }
                 else if (key == "wordWrap") {
-                    // TODO this is buggy, file github issue
                     session.setUseWrapMode(value);
                 }
                 else if (key == "printMargin") {
@@ -262,7 +261,7 @@ define([
                     editor.setHighlightActiveLine(value);
                 }
                 else if (key == "fontSize") {
-                    domStyle.set(node, key, value);
+                    $(node).css(key, value);
                 }
                 else if (key == "showIntentGuides") {
                     editor.setDisplayIndentGuides(value);
@@ -351,7 +350,7 @@ define([
                 wordWrap: false,
                 showPrintMargin: false,
                 highlightActiveLine: true,
-                fontSize: '15px',
+                fontSize: 15,
                 showGutter: true,
                 useWorker: true,
                 //className: 'editor-ace ace_editor',
@@ -370,7 +369,7 @@ define([
                     thiz.onContentChange(thiz.get('value') !== thiz.lastSavedContent);
                 },
                 onPrefsChanged: function () {
-                    thiz.setPreferences();
+                    thiz.setPreferences && thiz.setPreferences();
                 }
             },mixin || {});
         },
@@ -480,6 +479,9 @@ define([
                 thiz.onDidChange(arguments);
             });
             this.addBasicCommands(editor);
+
+            editor.setFontSize(options.fontSize);
+
             editor.$blockScrolling = true;
 
         },
