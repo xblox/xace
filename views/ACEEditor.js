@@ -358,7 +358,7 @@ define([
                 fileName:'none',
                 mode:'javascript',
                 value:value || this.value || 'No value',
-                theme:'ambiance',
+                theme:'idle_fingers',
                 splits:1,
                 aceOptions: {
                     enableBasicAutocompletion: true,
@@ -476,14 +476,11 @@ define([
             editor.getSelectedText = function () {
                 return thiz.editorSession.getTextRange(this.getSelectionRange());
             };
-
             editor.on('change', function () {
                 thiz.onDidChange(arguments);
             });
-            editor.$blockScrolling = true;
-
             this.addBasicCommands(editor);
-            //this.set('value','javascript2 ');
+            editor.$blockScrolling = true;
 
         },
         destroy:function(){
@@ -624,6 +621,29 @@ define([
 
                 this.setValue(value);
             }
+        },
+        addAutoCompleter: function (list) {
+            var editor = this.getEditor();
+            var langTools = ace.require("ace/ext/language_tools");
+            var rhymeCompleter = {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+
+                    if (prefix.length === 0) {
+                        callback(null, []);
+                        return;
+                    }
+
+                    if (!list) {
+                        callback(null, []);
+                        return;
+                    }
+
+                    callback(null, list.map(function (ea) {
+                        return {name: ea.value, value: ea.word, meta:ea.meta}
+                    }));
+                }
+            };
+            langTools.addCompleter(rhymeCompleter);
         }
     });
 

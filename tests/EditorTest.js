@@ -400,11 +400,10 @@ define([
 
     }
 
+
+
+
     function createEditorClass(){
-
-
-
-
 
 
         return declare('Editor',Editor,{

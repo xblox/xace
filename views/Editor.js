@@ -36,7 +36,7 @@ define([
             //
             //
             //
-            templateString: '<div data-dojo-attach-point="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden;position: relative;padding: 0px;margin: 0px">' +
+            templateString: '<div data-dojo-attach-point="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden !important;position: relative;padding: 0px;margin: 0px">' +
             '<div data-dojo-attach-point="header" class="view-header row" style="height: 30px;"></div>' +
             '<div data-dojo-attach-point="aceNode" class="view-body row" style="height:100%;width: 100%;position: absolute;top:0;left: 0;"></div>' +
             '<div data-dojo-attach-point="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
@@ -140,12 +140,10 @@ define([
 
 
             },
-
             getWebRoot: function () {
                 var webRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
                 return webRoot;
             },
-
             resize:function(){
 
                 var thiz = this,
@@ -184,7 +182,6 @@ define([
 
                 return this.inherited(arguments);
             },
-
             set:function(what,value){
                 var _res = this.inherited(arguments);
                 if(what ==='iconClass'){
