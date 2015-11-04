@@ -18,7 +18,6 @@ define([
 
 
 
-    console.clear();
 
 
 
@@ -104,6 +103,7 @@ define([
         return editor;
 
     }
+
 
 
 
@@ -401,9 +401,6 @@ define([
 
     }
 
-
-
-
     function createEditorClass(){
 
 
@@ -468,10 +465,12 @@ define([
     }
 
 
+
     function doTests(){
 
 
         var tab = TestUtils.createTab('ACE-TEST',null,module.id);
+
 
         //createEditorClass()||
         var _class = createEditorClass();

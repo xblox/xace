@@ -23,6 +23,11 @@ define([
     'module'
 
 
+
+
+
+
+
 ], function (declare, types,
              utils, Grid, factory,CIViewMixin,TabContainer,
 
@@ -34,7 +39,7 @@ define([
     ) {
 
 
-    console.clear();
+    //console.clear();
 
 
 
@@ -49,8 +54,6 @@ define([
 
 
     function createDriverCIS(driver,actionTarget){
-
-
 
         var CIS = {
             "inputs": [

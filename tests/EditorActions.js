@@ -19,6 +19,8 @@ define([
 
 
 
+
+
     var EDITOR_SETTINGS = 'Editor/Settings',
         INCREASE_FONT_SIZE = 'View/Increase Font Size',
         DECREASE_FONT_SIZE = 'View/Decrease Font Size',
@@ -28,6 +30,7 @@ define([
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
         ACTION = types.ACTION;
+
 
 
 
