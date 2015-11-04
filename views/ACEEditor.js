@@ -1,12 +1,13 @@
 define([
     "xdojo/declare",
     'dojo/has',
+    'dojo/dom-construct',
     'xide/utils',
     'xide/types',
     'xide/widgets/TemplatedWidgetBase',
     './_Split'
 
-], function (declare, has,
+], function (declare, has,domConstruct,
              utils, types, TemplatedWidgetBase,Splitter)
 {
 
@@ -533,7 +534,8 @@ define([
             //
 
 
-            var node = options.targetNode  ||  $('div')[0];
+            var node = options.targetNode  ||  domConstruct.create('div');
+
             $(node).css({
                 padding: "0",
                 margin: "0",
@@ -682,10 +684,12 @@ define([
             var self = this,
                 options = this.options || {};
 
-            if(!this.item && !this.value){
+            if(!this.item && this.value==null){
                 console.error('invalid editor args ');
+                //this.value = "";
                 return;
             }
+
 
             function createEditor(options,value){
                 self.createEditor(self.options || options,value);

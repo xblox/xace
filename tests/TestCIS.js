@@ -9,6 +9,7 @@ define([
     'xide/layout/TabContainer',
 
     'xide/views/CIGroupedSettingsView',
+    'xide/views/CIActionDialog',
     'xide/widgets/WidgetBase',
     'xide/widgets/_Widget',
     'xide/widgets/_CacheMixin',
@@ -31,15 +32,12 @@ define([
 ], function (declare, types,
              utils, Grid, factory,CIViewMixin,TabContainer,
 
-             CIGroupedSettingsView,
+             CIGroupedSettingsView,CIActionDialog,
              WidgetBase,_Widget,_CacheMixin,ActionToolbar,ActionModel,ActionProvider,
              Memory,ExpressionsGridView,
              TestUtils,ACEEditor,Editor,module
 
     ) {
-
-
-    //console.clear();
 
 
 
@@ -147,6 +145,7 @@ define([
     function openDriverSettings(driver){
 
         var toolbar = ctx.mainView.getToolbar();
+
 
 
 
@@ -328,7 +327,6 @@ define([
             }
         });
     }
-
 
 
     function createExpressionWidget(){
@@ -1270,21 +1268,20 @@ define([
 
 
 
+/*
         var view = utils.addWidget(cisRenderer,{
-
         },null,parent,true);
+        view.initWithCIS(CIS.inputs);*/
 
-        view.initWithCIS(CIS.inputs);
         ///dialog
-        /*
         var dialog = new CIActionDialog({
             cis:createDriverCIS().inputs
         });
         dialog.show();
-        */
         docker.resize();
         //view.resize();
     }
+
 
 
 
@@ -1431,10 +1428,10 @@ define([
     if (ctx) {
 
         blockManager = ctx.getBlockManager();
-        driverManager = ctx.getDriverManager();
+        //driverManager = ctx.getDriverManager();
         //marantz  = driverManager.getItemById("235eb680-cb87-11e3-9c1a-0800200c9a66");
 
-        //openDriverSettings(marantz);
+        //openDriverSettings(null);
         openCISDialog();
 
         return declare('a',null,{});
