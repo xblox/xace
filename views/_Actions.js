@@ -194,7 +194,9 @@ define([
                         height: '100%'
                     });
 
+
                     this._isMaximized = true;
+
 
                 } else {
                     this._isMaximized = false;
@@ -249,8 +251,7 @@ define([
                     }
                     case ACTION.SAVE:
                     {
-                        self.save(this.item);
-                        break;
+                        return self.save(this.item);
                     }
                     case ACTION.FIND:
                     {

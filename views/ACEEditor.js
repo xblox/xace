@@ -401,11 +401,9 @@ define([
                 }
 
                 editor && utils.resizeTo(editor.container,this.aceNode, true, true);
-
                 return widget ? widget.resize() : null;
-
             }
-            return this.debounce('resize',_resize.bind(this),this.options.resizeDelay || 600);
+            return this.debounce('resize',_resize.bind(this),this.options.resizeDelay || 600,null);
 
         },
         getAce:function(){
@@ -502,6 +500,9 @@ define([
         createEditor:function(_options,value){
 
             this.set('iconClass', this.iconClassNormal);
+
+            console.log('create editor!',this);
+
             if(this.editor || this.split){
                 debugger;
             }
@@ -696,7 +697,7 @@ define([
             }
 
 
-            if (this.value) {
+            if (this.value!=null) {
                 createEditor(null,this.value);
             } else {
 

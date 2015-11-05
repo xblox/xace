@@ -69,6 +69,7 @@ define([
                     if(onError){
                         onError('Editor::saveContent : Have no store delegate!');
                     }
+                    return false;
                 }else{
                     var _s = function(){
 
@@ -191,6 +192,17 @@ define([
                     }
                 }
                 return _res;
+            },
+            get:function(what){
+                if(what==='value'){
+                    var self = this,
+                        editor = self.getEditor(),
+                        session = editor.session;
+
+                        return session.getValue();
+
+                }
+                return this.inherited(arguments);
             }
 
         }
