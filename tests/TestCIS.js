@@ -8,6 +8,7 @@ define([
     "xide/views/CIViewMixin",
     'xide/layout/TabContainer',
 
+
     'xide/views/CIGroupedSettingsView',
     'xide/views/CIActionDialog',
     'xide/widgets/WidgetBase',
@@ -22,9 +23,6 @@ define([
     'xace/views/ACEEditor',
     'xace/views/Editor',
     'module'
-
-
-
 
 
 
@@ -328,7 +326,6 @@ define([
             }
         });
     }
-
 
     function createExpressionWidget(){
 
@@ -1174,7 +1171,6 @@ define([
 
         var toolbar = ctx.mainView.getToolbar();
 
-
         CIS = createDriverCIS(driver,toolbar);
 
         var docker = ctx.mainView.getDocker();
@@ -1282,20 +1278,6 @@ define([
         docker.resize();
         //view.resize();
     }
-
-
-
-
-/*
-     * playground
-     */
-    var ctx = window.sctx,
-        ACTION = types.ACTION,
-        root,
-        scope,
-        blockManager,
-        driverManager,
-        marantz;
 
     function createScope() {
 
@@ -1425,15 +1407,27 @@ define([
 
         return blockManager.toScope(data);
     }
+/*
+     * playground
+     */
+    var ctx = window.sctx,
+        ACTION = types.ACTION,
+        root,
+        scope,
+        blockManager,
+        driverManager,
+        marantz;
+
+
 
     if (ctx) {
 
-        blockManager = ctx.getBlockManager();
+        //blockManager = ctx.getBlockManager();
         //driverManager = ctx.getDriverManager();
         //marantz  = driverManager.getItemById("235eb680-cb87-11e3-9c1a-0800200c9a66");
 
         //openDriverSettings(null);
-        openCISDialog();
+        //openCISDialog();
 
         return declare('a',null,{});
     }
