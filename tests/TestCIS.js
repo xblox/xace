@@ -7,8 +7,6 @@ define([
     'xide/factory',
     "xide/views/CIViewMixin",
     'xide/layout/TabContainer',
-
-
     'xide/views/CIGroupedSettingsView',
     'xide/views/CIActionDialog',
     'xide/widgets/WidgetBase',
@@ -37,6 +35,8 @@ define([
              TestUtils,ACEEditor,Editor,module
 
     ) {
+
+
 
 
 
