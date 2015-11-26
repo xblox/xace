@@ -479,15 +479,19 @@ define([
                     group: "Settings"
                 }));
 
-                _createSettings('Default', KEYBOARD + '/Default', null, 'ace');
-                _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
-                _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
+                if(DefaultActions.hasAction(permissions,KEYBOARD)){
+                    _createSettings('Default', KEYBOARD + '/Default', null, 'ace');
+                    _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
+                    _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
+                }
 
-                //layout
-                actions.push(_createSettings('Layout','View/Layout','fa-columns',types.VIEW_SPLIT_MODE.SOURCE,null,'View'));
-                actions.push(_createSettings('Horizontal','View/Layout/Horizontal','layoutIcon-horizontalSplit',types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL,null,'View'));
-                actions.push(_createSettings('Vertical','View/Layout/Vertical','layoutIcon-layout293',types.VIEW_SPLIT_MODE.SPLIT_VERTICAL,null,'View'));
-                actions.push(_createSettings('Diff','View/Layout/Diff','fa-columns','Diff',null,'View'));
+                if(DefaultActions.hasAction(permissions,LAYOUT)) {
+                    //layout
+                    actions.push(_createSettings('Layout', 'View/Layout', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View'));
+                    actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View'));
+                    actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View'));
+                    actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
+                }
 
 
 

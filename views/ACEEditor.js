@@ -204,6 +204,19 @@ define([
 
                 var node = editor.container;
 
+                if(key =='item'){
+                    session.setUseWorker(false);
+                    self.getContent(value,
+                        function (content) {
+                            //console.error('update edito!' + file.path);
+                            var newMode = self._getMode(value.path);
+                            self.set('value',content);
+                            //self.set('mode',newMode);
+                            self.setMode(newMode);
+                            session.setUseWorker(self.options.useWorker);
+                        });
+                }
+
                 if (key == "value") {
 
                     session.setValue(value);
@@ -309,7 +322,6 @@ define([
             return ext;
         },
         setOptions:function(options){
-
             this.options = options;
 
             _.each(options,function(value,name){
@@ -489,6 +501,7 @@ define([
         },
         destroy:function(){
 
+            console.error('destroy editor');
             this.inherited(arguments);
             var editor = this.getEditor();
             editor && editor.destroy();
@@ -501,11 +514,10 @@ define([
 
             this.set('iconClass', this.iconClassNormal);
 
-            console.log('create editor!',this);
-
             if(this.editor || this.split){
-                debugger;
+                return this.editor || this.split;
             }
+            console.log('create editor!',this);
 
             ///////////////////////////////////////////////////////////////////
             //
