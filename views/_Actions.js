@@ -393,7 +393,7 @@ define([
                     group: 'View'
                 }));
 
-                this._addThemes(actions);
+                self._addThemes && self._addThemes(actions);
 
 
                 actions.push(this.createAction({
