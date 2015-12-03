@@ -82,7 +82,7 @@ define([
             SNIPPETS,
             EDITOR_CONSOLE,
             EDITOR_SETTINGS,
-            ACTION.MAXIMIZE,
+            ACTION.FULLSCREEN,
             LAYOUT
 
         ];
@@ -240,7 +240,7 @@ define([
                         editor.setFontSize(editor.getFontSize() - 1);
                         return true;
                     }
-                    case ACTION.MAXIMIZE:
+                    case ACTION.FULLSCREEN:
                     {
                         return this.maximize();
                     }
@@ -364,8 +364,8 @@ define([
                 }));
 
                 actions.push(this.createAction({
-                    label: 'Maximize',
-                    command: ACTION.MAXIMIZE,
+                    label: 'Fullscreen',
+                    command: ACTION.FULLSCREEN,
                     icon: ICON.MAXIMIZE,
                     keycombo: 'ctrl f11',
                     group: 'View'
