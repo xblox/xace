@@ -367,7 +367,7 @@ define([
                 fileName:'none',
                 mode:'javascript',
                 value:value || this.value || 'No value',
-                theme:'day',
+                theme:'idle_fingers',
                 splits:1,
                 aceOptions: {
                     enableBasicAutocompletion: true,

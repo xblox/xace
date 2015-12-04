@@ -208,7 +208,16 @@ define([
                 return true;
             },
             save: function (item) {
-                return this.saveContent(this.get('value'), item);
+                var res = this.saveContent(this.get('value'), item);
+                var thiz = this;
+                setTimeout(function() {
+                	var _ed = thiz.getEditor();
+                	if(_ed){
+                		_ed.focus();
+                	}
+                }, 600);
+                
+                return res;
             },
             runAction: function (action) {
 
