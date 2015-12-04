@@ -399,12 +399,15 @@ define([
         },
         resize:function(what,target,event){
 
+            var options = this.options || {};
+
             function _resize() {
 
                 this.inherited('resize',[what,target]);
 
                 var editor = this.getEditor(),
                     widget = this.split || this.editor;
+
 
                 if( !editor || !this.aceNode || !editor.container){
                     console.error('invalid DOM! ' + this.id + ' ' + this.value);
@@ -416,7 +419,7 @@ define([
                 editor && utils.resizeTo(editor.container,this.aceNode, true, true);
                 return widget ? widget.resize() : null;
             }
-            return this.debounce('resize',_resize.bind(this),this.options.resizeDelay||300,null);
+            return this.debounce('resize',_resize.bind(this),options.resizeDelay||300,null);
 
         },
         getAce:function(){
@@ -502,7 +505,6 @@ define([
         },
         destroy:function(){
 
-            console.error('destroy editor');
             this.inherited(arguments);
             var editor = this.getEditor();
             editor && editor.destroy();

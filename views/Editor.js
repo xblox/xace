@@ -3,25 +3,18 @@ define([
     "dojo/_base/declare",
     'xide/types',
     'xide/mixins/ActionProvider',
-    './ACEEditor',
-    './_Actions',
+    'xace/views/ACEEditor',
+    'xace/views/_Actions',
     'xide/action/Toolbar'
 
-
-], function (declare, types, ActionProvider,
-             ACEEditor,
-
-             _Actions,Toolbar)
-{
-
-
+], function (declare, types, ActionProvider,ACEEditor,_Actions,Toolbar){
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
      */
-    var Module = declare('xace/views/Editor',[ACEEditor,_Actions,Toolbar,ActionProvider],
-        {
+    var Module = declare('xace/views/Editor',[ACEEditor,_Actions,Toolbar,ActionProvider],{
 
+            options:null,
             /**
              * The icon class when doing any storage operation
              * @member loadingIcon {string}
