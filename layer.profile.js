@@ -106,6 +106,15 @@ var profile = {
     resourceTags: {
         // Files that contain test code.
         test: function (filename, mid) {
+            if(filename){
+
+                if(filename.indexOf('xace/ace')!=-1 || filename.indexOf('xace/aceBuild')!=-1|| filename.indexOf('xace/tests')!=-1){
+
+                    return true;
+                }
+
+            }
+
             return false;
         },
 

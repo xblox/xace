@@ -23,11 +23,6 @@ define([
     'module'
 
 
-
-
-
-
-
 ], function (declare, types,
              utils, Grid, factory,CIViewMixin,TabContainer,
 
@@ -231,7 +226,7 @@ define([
                         this.attachWidgets(this.widgets);
                     }
                 }
-            },
+            }
         });
 
 /*
