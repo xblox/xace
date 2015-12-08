@@ -152,25 +152,27 @@ define([
             // finally insert the element to the body element in order to load the script
             document.body.appendChild(jsElm);
         },
-        setMode: function (mode) {
+        setMode: function (mode,_ctx,cb) {
 
-            if (this.ctx && this.ctx.getResourceManager()) {
+            var ctx = _ctx || this.ctx;
 
-                var thiz = this,
-                    editor = this.getEditor();
+            if (ctx && ctx.getResourceManager()) {
+
+                var thiz = this;
 
 
                 if (!_loadedModes[mode]) {
 
                     var modeFile = null;
 
-                    var aceRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.ACE);
+                    var aceRoot = ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.ACE);
                     if (!aceRoot) {
 
-                        var webRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
+                        var webRoot = ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
 
                         if (has('debug') === true) {
-                            webRoot += '/lib/ace/src-min-noconflict/'
+                            //webRoot += '/lib/ace/src-min-noconflict/'
+                            webRoot += '/xfile/ext/ace/';
                         } else {
                             webRoot += '/xfile/ext/ace/'
                         }
@@ -181,10 +183,14 @@ define([
 
                     this.loadScript(modeFile, null, function () {
                         _loadedModes[mode] = true;//update cache
+
                         thiz.set('mode', mode);
+                        cb && cb(mode);
+
                     });
                 }else {
                     thiz.set('mode', mode);
+                    cb && cb(mode);
                 }
 
             } else {
