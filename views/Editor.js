@@ -2,17 +2,69 @@
 define([
     "dojo/_base/declare",
     'xide/types',
+    'xide/utils',
     'xide/mixins/ActionProvider',
     'xace/views/ACEEditor',
     'xace/views/_Actions',
-    'xide/action/Toolbar'
+    'xide/action/Toolbar',
+    "xide/mixins/PersistenceMixin"
 
-], function (declare, types, ActionProvider,ACEEditor,_Actions,Toolbar){
+], function (declare, types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
+
+
+    var Persistence = declare('xace.views.EditorPersistence', PersistenceMixin, {
+
+        defaultPrefenceTheme: 'idle_fingers',
+        defaultPrefenceFontSize: 14,
+        saveValueInPreferences: true,
+        getDefaultPreferences: function () {
+            return utils.mixin(
+                {
+                    theme: this.defaultPrefenceTheme,
+                    fontSize: this.defaultPrefenceFontSize
+                },
+                this.saveValueInPreferences ? {value: this.get('value')} : null);
+        },
+        onAfterAction: function (action) {
+            this.savePreferences({
+                theme: this.get('theme').replace('ace/theme/', ''),
+                fontSize: this.getEditor().getFontSize()
+            });
+            return this.inherited(arguments);
+        },
+        /**
+         * Override id for pref store:
+         * know factors:
+         *
+         * - IDE theme
+         * - per bean description and context
+         * - by container class string
+         * - app / plugins | product / package or whatever this got into
+         * -
+         **/
+        toPreferenceId: function (prefix) {
+            prefix = prefix || ($('body').hasClass('xTheme-transparent') ? 'xTheme-transparent' : 'xTheme-white' );
+            return (prefix || this.cookiePrefix || '') + '_xace';
+        },
+        getDefaultOptions: function () {
+
+            //take our defaults, then mix with prefs from store,
+            var _super = this.inherited(arguments),
+
+                _prefs = this.loadPreferences(null);
+
+            (_prefs && utils.mixin(_super, _prefs) ||
+                //else store defaults
+            this.savePreferences(this.getDefaultPreferences()));
+            return _super;
+        }
+    });
+
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
      */
-    var Module = declare('xace/views/Editor',[ACEEditor,_Actions,Toolbar,ActionProvider],{
+    var Module = declare('xace/views/Editor',[ACEEditor,_Actions,Toolbar,ActionProvider,Persistence],{
 
             options:null,
             /**

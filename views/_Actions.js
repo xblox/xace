@@ -180,7 +180,7 @@ define([
 
                 action = this.getAction(action);
                 if (!action) {
-                    return;
+                    return false;
                 }
 
                 var self = this,
@@ -295,6 +295,8 @@ define([
                 }
 
                 console.log('run action : ' + action.command);
+
+                return true;
             },
             getActions: function (permissions) {
 
