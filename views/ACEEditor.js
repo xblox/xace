@@ -210,6 +210,7 @@ define([
 
                 var node = editor.container;
 
+
                 if(key =='item'){
                     session.setUseWorker(false);
                     self.getContent(value,
@@ -223,11 +224,8 @@ define([
                         });
                 }
 
-                if (key == "value") {
-
+                if (key == "value" && value) {
                     session.setValue(value);
-
-
                 }
                 else if (key == "theme") {
                     if (typeof value == "string") {
@@ -607,54 +605,6 @@ define([
             this.setOptions(options);
             this.onEditorCreated(editor,options);
             return editor;
-            {
-                this.aceEditor = editorPane;
-
-
-                this.aceEditor.setOptions();
-                this.aceEditor.getEditor().$blockScrolling = true;
-                this.getAce().setFontSize(settings.fontSize);
-
-                if (editorPane.split) {
-                    editorPane.split.$fontSize = settings.fontSize;
-                }
-
-                this.addCommands();
-                this.addExtras();
-
-                setTimeout(function () {
-                    thiz.setMode(mode);
-                    thiz.setTheme(thiz.defaultTheme);
-                }, 10);
-
-
-                if (this.statusbar) {
-                    this.createStatusBar();
-                }
-
-                if (this.hasMaximize) {
-                    this.addKeyboardListerner('ctrl f11', this.keyPressDefault(), null, this, function () {
-                        thiz.maximize();
-                    }, this.getAce().container);
-                }
-
-                if (this.hasSave) {
-                    var params = {
-                        prevent_repeat: false,
-                        prevent_default: true,
-                        is_unordered: false,
-                        is_counting: false,
-                        is_exclusive: true,
-                        is_solitary: false,
-                        is_sequence: true
-                    };
-                    this.addKeyboardListerner('ctrl s', params, null, this, function () {
-                        thiz.saveContent();
-                    }, this.domNode);
-                }
-
-                this.setValue(value);
-            }
         },
         addAutoCompleter: function (list) {
             var editor = this.getEditor();

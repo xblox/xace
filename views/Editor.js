@@ -242,9 +242,10 @@ define([
                 if(what==='value'){
                     var self = this,
                         editor = self.getEditor(),
-                        session = editor.session;
 
-                        return session.getValue();
+                        session = editor ? editor.session : null;
+
+                        return session ? session.getValue() : null;
 
                 }
                 return this.inherited(arguments);
