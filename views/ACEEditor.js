@@ -205,12 +205,8 @@ define([
 
 
             if(editor && session) {
-
                 //console.log('set ace option ' + key,value);
-
                 var node = editor.container;
-
-
                 if(key =='item'){
                     session.setUseWorker(false);
                     self.getContent(value,
@@ -290,6 +286,10 @@ define([
                 else if (key == "showGutter") {
                     editor.renderer.setShowGutter(value);
                 }
+            }else{
+
+                console.warn('have no editor or session');
+
             }
             return this.inherited("set", arguments);
 
@@ -588,6 +588,10 @@ define([
 
                 this.editor = editor = split.getEditor(0);
                 this.editorSession = this.editor.getSession();
+
+                if(value){
+                    this.editorSession.setValue(value);
+                }
                 //container = editor.container;
                 //utils.resizeTo(container,this.domNode);
                 //split && split.resize();
