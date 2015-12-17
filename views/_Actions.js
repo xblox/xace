@@ -103,6 +103,7 @@ define([
 
                 this.resize();
                 this.publish(types.EVENTS.RESIZE, null, 1500);
+                this.getEditor().focus();
 
             },
             maximize: function () {
