@@ -129,6 +129,7 @@ define([
     ];
 
     var containerClass = declare('ACEBASE',[TemplatedWidgetBase],{
+        resizeToParent:true,
         templateString:'<div data-dojo-attach-point="aceNode" style="width: 100%;height: 100%" class=""></div>'
     });
 

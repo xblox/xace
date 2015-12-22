@@ -192,6 +192,12 @@ define([
             },
             resize:function(){
 
+                var parent = this.getParent();
+                if(!this._isMaximized) {
+                    console.log('resize to parent');
+                    parent && utils.resizeTo(this, parent, true, true);
+                }
+
                 var thiz = this,
                     toolbar = this.getToolbar(),
                     noToolbar = false,

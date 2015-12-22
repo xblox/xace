@@ -91,6 +91,13 @@ define([
 
             onMaximized: function (maximized) {
 
+                var parent = this.getParent();
+                if(maximized==false) {
+                    if (parent && parent.resize) {
+                        parent.resize();
+                    }
+                }
+
                 var toolbar = this.getToolbar();
                 if (toolbar) {
 
@@ -101,8 +108,16 @@ define([
                     }
                 }
 
-                this.resize();
-                this.publish(types.EVENTS.RESIZE, null, 1500);
+
+                if(maximized==false) {
+                    this.resize();
+                    parent && utils.resizeTo(this, parent, true, true);
+                }else{
+
+                }
+
+
+                //this.publish(types.EVENTS.RESIZE, null, 1500);
                 this.getEditor().focus();
 
             },
@@ -114,6 +129,8 @@ define([
                     thiz = this;
 
                 if (!this._isMaximized) {
+
+                    this._isMaximized = true;
                     var vp = $(this.domNode.ownerDocument);
                     var root = $('body')[0];
                     var container = utils.create('div', {
@@ -153,7 +170,7 @@ define([
                     });
 
 
-                    this._isMaximized = true;
+
 
 
                 } else {
