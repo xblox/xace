@@ -53,6 +53,9 @@ define([
         {
             permissions: DEFAULT_PERMISSIONS,
             _searchBoxOpen:false,
+            onSingleView:function(){
+
+            },
             setSplitMode: function (mode) {
 
 
@@ -389,7 +392,7 @@ define([
                     keycombo: 'f1'
                 }));
 
-
+/*
                 actions.push(this.createAction({
                     label: 'Snippets',
                     command: SNIPPETS,
@@ -403,6 +406,7 @@ define([
                     icon: 'fa-terminal',
                     group: 'Show'
                 }));
+                */
 
 
                 ///editor settings
@@ -457,7 +461,7 @@ define([
                  };
                  */
 
-
+/*
                 actions.push(this.createAction({
                     label: 'Keyboard',
                     command: KEYBOARD,
@@ -470,13 +474,14 @@ define([
                     _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
                     _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
                 }
+                */
 
                 if(DefaultActions.hasAction(permissions,LAYOUT)) {
                     //layout
-                    actions.push(_createSettings('Layout', 'View/Layout', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View'));
+                    actions.push(_createSettings('Layout', 'View/Layout/None', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View'));
                     actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View'));
                     actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View'));
-                    actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
+                    //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
                 }
 
 
