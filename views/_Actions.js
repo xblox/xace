@@ -261,7 +261,7 @@ define([
                         if (sb) {
                             _search(sb);
                         } else {
-                            net.loadScript(webRoot + '/xfile/ext/ace2/ext-searchbox.js', function (what) {
+                            net.loadScript(webRoot + '/xfile/ext/ace/ext-searchbox.js', function (what) {
                                 var sbm = ace.require("ace/ext/searchbox");
                                 _search(new sbm.SearchBox(editor));
                             });
