@@ -373,6 +373,9 @@ define([
         onContentChange:function(){
 
         },
+        onDidChange: function () {
+            this.onContentChange(this.get('value') !== this.lastSavedContent);
+        },
         getDefaultOptions:function(value,mixin){
 
             var thiz = this;
