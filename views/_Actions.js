@@ -1,5 +1,6 @@
 /** @module xace/views/Editor **/
 define([
+    'dcl/dcl',
     "dojo/_base/declare",
     'xide/utils',
     'xide/types',
@@ -9,7 +10,7 @@ define([
     'xide/action/DefaultActions'
 
 
-], function (declare, utils, types, ActionProvider,
+], function (dcl,declare, utils, types, ActionProvider,
              ACEEditor,
              Toolbar, DefaultActions) {
 
@@ -49,8 +50,7 @@ define([
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
      */
-    var Module = declare('xace/views/Editor', [ACEEditor, Toolbar, ActionProvider],
-        {
+    var Module = dcl([ACEEditor, Toolbar.dcl, ActionProvider.dcl],{
             permissions: DEFAULT_PERMISSIONS,
             _searchBoxOpen:false,
             onSingleView:function(){
@@ -570,15 +570,11 @@ define([
                 ];
             },
             startup: function () {
-
                 if (this.permissions) {
                     var _defaultActions = DefaultActions.getDefaultActions(this.permissions, this, this);
                     _defaultActions = _defaultActions.concat(this.getActions(this.permissions));
                     this.addActions(_defaultActions);
                 }
-
-
-                this.inherited(arguments);
             }
         }
     );

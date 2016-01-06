@@ -1,5 +1,6 @@
 /** @module xace/views/Editor **/
 define([
+    'dcl/dcl',
     "dojo/_base/declare",
     'xide/types',
     'xide/utils',
@@ -9,11 +10,12 @@ define([
     'xide/action/Toolbar',
     "xide/mixins/PersistenceMixin"
 
-], function (declare, types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
+], function (dcl,declare, types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
 
 
-    var Persistence = declare('xace.views.EditorPersistence', PersistenceMixin, {
+    var Persistence = dcl([PersistenceMixin.dcl], {
 
+        declaredClass:'xace.views.EditorPersistence',
         defaultPrefenceTheme: 'idle_fingers',
         defaultPrefenceFontSize: 14,
         saveValueInPreferences: true,
@@ -64,8 +66,9 @@ define([
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
      */
-    var Module = declare('xace/views/Editor',[ACEEditor,_Actions,Toolbar,ActionProvider,Persistence],{
+    var Module = dcl([ACEEditor,_Actions,Toolbar.dcl,ActionProvider.dcl,Persistence],{
 
+            declaredClass:'xace/views/Editor',
             options:null,
             /**
              * The icon class when doing any storage operation
@@ -81,10 +84,10 @@ define([
             //
             //
             //
-            templateString: '<div data-dojo-attach-point="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden !important;position: relative;padding: 0px;margin: 0px">' +
-            '<div data-dojo-attach-point="header" class="view-header row" style="height: auto;"></div>' +
-            '<div data-dojo-attach-point="aceNode" class="view-body row" style="height:100%;width: 100%;position: relative;"></div>' +
-            '<div data-dojo-attach-point="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
+            templateString: '<div attachTo="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden !important;position: relative;padding: 0px;margin: 0px">' +
+            '<div attachTo="header" class="view-header row" style="height: auto;"></div>' +
+            '<div attachTo="aceNode" class="view-body row" style="height:100%;width: 100%;position: relative;"></div>' +
+            '<div attachTo="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
             '</div>',
 
             getContent:function(item,onSuccess,onError){
@@ -230,8 +233,6 @@ define([
                 }
 
                 aceNode.css('top',topOffset);
-
-                return this.inherited(arguments);
             },
             set:function(what,value){
                 var _res = this.inherited(arguments);

@@ -1,4 +1,5 @@
 define([
+    'dcl/dcl',
     "xdojo/declare",
     'dojo/has',
     'dojo/dom-construct',
@@ -7,7 +8,7 @@ define([
     'xide/widgets/TemplatedWidgetBase',
     './_Split'
 
-], function (declare, has,domConstruct,
+], function (dcl,declare, has,domConstruct,
              utils, types, TemplatedWidgetBase,Splitter)
 {
 
@@ -128,15 +129,16 @@ define([
         'yaml'
     ];
 
-    var containerClass = declare('ACEBASE',[TemplatedWidgetBase],{
+    var containerClass = dcl([TemplatedWidgetBase],{
         resizeToParent:true,
-        templateString:'<div data-dojo-attach-point="aceNode" style="width: 100%;height: 100%" class=""></div>'
+        templateString:'<div attachTo="aceNode" style="width: 100%;height: 100%" class=""></div>'
     });
 
     /**
      *
      */
-    var EditorInterfaceImplementation = declare('xace/views/EditorInterface',null,{
+    var EditorInterfaceImplementation = dcl(null,{
+        declaredClass:'xace/views/EditorInterface',
         editorSession:null,
         loadScript: function (url, attributes, readyCB) {
             // DOM: Create the script element
@@ -408,7 +410,7 @@ define([
 
             function _resize() {
 
-                this.inherited('resize',[what,target]);
+                //this.inherited('resize',[what,target]);
 
                 var editor = this.getEditor(),
                     widget = this.split || this.editor;
@@ -510,7 +512,7 @@ define([
         },
         destroy:function(){
 
-            this.inherited(arguments);
+            //this.inherited(arguments);
             var editor = this.getEditor();
             editor && editor.destroy();
             var _resize = this['resize_debounced'];
@@ -639,7 +641,8 @@ define([
     /**
      *
      */
-    var EditorClass = declare('xace/views/ACE',null,{
+    var EditorClass = dcl(null,{
+        declaredClass:'xace/views/ACE',
         onLoaded:function(){
             this.set('iconClass', this.iconClassNormal);
         },
@@ -697,15 +700,13 @@ define([
         }
     });
 
-    var Module = declare('xace/views/ACEEditor',[containerClass,EditorClass,EditorInterfaceImplementation]);
+
+    var Module = dcl([containerClass,EditorClass,EditorInterfaceImplementation],{});
 
     Module.EditorImplementation = EditorInterfaceImplementation;
     Module.Editor = EditorClass;
     Module.Container = containerClass;
     Module.Splitter = Splitter;
-
-
-
     return Module;
 
 });

@@ -1,6 +1,6 @@
 define([
-    "xdojo/declare"
-],function (declare){
+    'dcl/dcl'
+],function (dcl){
 
     var _splitProto = null;
     var getSplitProto = function() {
@@ -380,7 +380,9 @@ define([
         return _splitProto;
     };
 
-    var Module = declare('xace/views/Split',null,{});
+    var Module = dcl(null,{
+        declaredClass:'xace/views/Split'
+    });
     Module.getSplitter = getSplitProto;
     return Module;
 });
