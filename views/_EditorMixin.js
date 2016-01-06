@@ -1,7 +1,6 @@
 define([
-    'dcl/dcl',
-    "dojo/_base/declare"
-],function (dcl,declare){
+    'dcl/dcl'
+],function (dcl){
     /**
      * Adds minimum comfort to an editor ready to be used in xide/xfile
      */

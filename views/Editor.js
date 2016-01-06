@@ -1,7 +1,7 @@
 /** @module xace/views/Editor **/
 define([
     'dcl/dcl',
-    "dojo/_base/declare",
+    'dcl/inherited',
     'xide/types',
     'xide/utils',
     'xide/mixins/ActionProvider',
@@ -10,7 +10,7 @@ define([
     'xide/action/Toolbar',
     "xide/mixins/PersistenceMixin"
 
-], function (dcl,declare, types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
+], function (dcl,inherited,types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
 
 
     var Persistence = dcl([PersistenceMixin.dcl], {
@@ -28,8 +28,9 @@ define([
                 this.saveValueInPreferences ? {value: this.get('value')} : null);
         },
         onAfterAction: function (action) {
+            var _theme = this.getEditor().getTheme();
             this.savePreferences({
-                theme: this.get('theme').replace('ace/theme/', ''),
+                theme: _theme.replace('ace/theme/', ''),
                 fontSize: this.getEditor().getFontSize()
             });
             return this.inherited(arguments);
@@ -66,7 +67,7 @@ define([
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
      */
-    var Module = dcl([ACEEditor,_Actions,Toolbar.dcl,ActionProvider.dcl,Persistence],{
+    var Module = dcl([_Actions,ACEEditor,ActionProvider.dcl,Persistence,Toolbar.dcl],{
 
             declaredClass:'xace/views/Editor',
             options:null,
@@ -145,7 +146,6 @@ define([
                     return this.storeDelegate.saveContent(_value,_s,null,thiz.item);
                 }
             },
-
             addCommands: function () {
 
                 var aceEditor = this.getAce(),
@@ -234,7 +234,7 @@ define([
 
                 aceNode.css('top',topOffset);
             },
-            set:function(what,value){
+            __set:function(what,value){
                 var _res = this.inherited(arguments);
                 if(what ==='iconClass'){
                     var _parent = this._parent;
@@ -244,7 +244,7 @@ define([
                 }
                 return _res;
             },
-            get:function(what){
+            __get:function(what){
                 if(what==='value'){
                     var self = this,
                         editor = self.getEditor(),

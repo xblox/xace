@@ -6,10 +6,11 @@ define([
     'xide/utils',
     'xide/types',
     'xide/widgets/TemplatedWidgetBase',
-    './_Split'
+    './_Split',
+    'xide/action/DefaultActions'
 
 ], function (dcl,declare, has,domConstruct,
-             utils, types, TemplatedWidgetBase,Splitter)
+             utils, types, TemplatedWidgetBase,Splitter,DefaultActions)
 {
 
     var _loadedModes = {};//global cache for loaded modes
@@ -200,12 +201,30 @@ define([
                 console.error('have no resource manager!');
             }
         },
+        get:function(what){
+            if(what==='value'){
+                var self = this,
+                    editor = self.getEditor(),
+
+                    session = editor ? editor.session : null;
+
+                return session ? session.getValue() : null;
+
+            }
+            return this.inherited(arguments);
+        },
         set: function (key, value) {
 
             var self = this,
                 editor = this.getEditor(),
                 session = this.editorSession;
 
+            if(key ==='iconClass'){
+                var _parent = this._parent;
+                if(_parent && _parent.icon){
+                    this._parent.icon(value);
+                }
+            }
 
             if(editor && session) {
                 //console.log('set ace option ' + key,value);
@@ -648,18 +667,17 @@ define([
         },
         startup: function () {
 
-
-            if (this._started) {
-                return;
+            if (this.permissions) {
+                var _defaultActions = DefaultActions.getDefaultActions(this.permissions, this, this);
+                _defaultActions = _defaultActions.concat(this.getActions(this.permissions));
+                this.addActions(_defaultActions);
             }
+
 
             //save icon class normal
             this.iconClassNormal = '' + this.iconClass;
 
             this.set('iconClass', 'fa-spinner fa-spin');
-
-            this.inherited(arguments);
-
 
             var self = this,
                 options = this.options || {};
