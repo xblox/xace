@@ -86,7 +86,7 @@ define([
             //
             //
             templateString: '<div attachTo="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden !important;position: relative;padding: 0px;margin: 0px">' +
-            '<div attachTo="header" class="view-header row" style="height: auto;"></div>' +
+            '<div attachTo="header" class="view-header row bg-opaque" style="height: auto;"></div>' +
             '<div attachTo="aceNode" class="view-body row" style="height:100%;width: 100%;position: relative;"></div>' +
             '<div attachTo="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
             '</div>',

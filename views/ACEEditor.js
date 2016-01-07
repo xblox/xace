@@ -1,6 +1,5 @@
 define([
     'dcl/dcl',
-    "xdojo/declare",
     'dojo/has',
     'dojo/dom-construct',
     'xide/utils',
@@ -9,7 +8,7 @@ define([
     './_Split',
     'xide/action/DefaultActions'
 
-], function (dcl,declare, has,domConstruct,
+], function (dcl,has,domConstruct,
              utils, types, TemplatedWidgetBase,Splitter,DefaultActions)
 {
 
