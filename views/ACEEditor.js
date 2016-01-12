@@ -671,7 +671,9 @@ define([
 
             if (this.permissions) {
                 var _defaultActions = DefaultActions.getDefaultActions(this.permissions, this, this);
+
                 _defaultActions = _defaultActions.concat(this.getActions(this.permissions));
+
                 this.addActions(_defaultActions);
             }
 
