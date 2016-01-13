@@ -45,6 +45,8 @@ define([
         ];
 
 
+
+
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
@@ -207,7 +209,8 @@ define([
                     command = action.command,
                     ACTION = types.ACTION,
                     editor = this.getEditor(),
-                    session = this.editorSession;
+                    session = this.editorSession,
+                    result = false;
 
 
                 if(command.indexOf(LAYOUT)!=-1){
@@ -265,7 +268,9 @@ define([
                                 _search(new sbm.SearchBox(editor));
                             });
                         }
-                        break;
+
+                        return true;
+
                     }
                 }
 
@@ -283,7 +288,7 @@ define([
                         emacs: "ace/keyboard/emacs"
                     };
                     editor.setKeyboardHandler(keybindings[action.option]);
-
+                    return true;
                 }
 
 
@@ -312,11 +317,12 @@ define([
                             editor.setOption(action.option, false);
                         }
                     }
+                    return true;
                 }
 
                 console.log('run action : ' + action.command);
 
-                return true;
+                return this.inherited(arguments);
             },
             getActions: function (permissions) {
 

@@ -6,11 +6,11 @@ define([
     'xide/types',
     'xide/widgets/TemplatedWidgetBase',
     './_Split',
-    'xide/action/DefaultActions'
+    'xide/action/DefaultActions',
+    './_AceMultiDocs'
 
-], function (dcl,has,domConstruct,
-             utils, types, TemplatedWidgetBase,Splitter,DefaultActions)
-{
+], function (dcl, has, domConstruct,
+             utils, types, TemplatedWidgetBase, Splitter, DefaultActions, _AceMultiDocs) {
 
     var _loadedModes = {};//global cache for loaded modes
     var _loadedThemes = {};//global cache for loaded themes
@@ -129,17 +129,27 @@ define([
         'yaml'
     ];
 
-    var containerClass = dcl([TemplatedWidgetBase],{
-        resizeToParent:true,
-        templateString:'<div attachTo="aceNode" style="width: 100%;height: 100%" class=""></div>'
+    var containerClass = dcl([TemplatedWidgetBase], {
+        resizeToParent: true,
+        templateString: '<div attachTo="aceNode" style="width: 100%;height: 100%" class=""></div>'
     });
 
     /**
      *
      */
-    var EditorInterfaceImplementation = dcl(null,{
-        declaredClass:'xace/views/EditorInterface',
-        editorSession:null,
+    var EditorInterfaceImplementation = dcl(_AceMultiDocs, {
+
+        declaredClass: 'xace/views/EditorInterface',
+        editorSession: null,
+        enableMultiDocuments: function () {
+
+            console.log('add file completer');
+            var completer = this.addFileCompleter();
+            var text = "var xxxTop = 2*3;";
+            var path = "asdf.js";
+            completer.addDocument(path, text);
+        },
+
         loadScript: function (url, attributes, readyCB) {
             // DOM: Create the script element
             var jsElm = document.createElement("script");
@@ -155,7 +165,7 @@ define([
             // finally insert the element to the body element in order to load the script
             document.body.appendChild(jsElm);
         },
-        setMode: function (mode,_ctx,cb) {
+        setMode: function (mode, _ctx, cb) {
 
             var ctx = _ctx || this.ctx;
 
@@ -191,7 +201,7 @@ define([
                         cb && cb(mode);
 
                     });
-                }else {
+                } else {
                     thiz.set('mode', mode);
                     cb && cb(mode);
                 }
@@ -200,8 +210,8 @@ define([
                 console.error('have no resource manager!');
             }
         },
-        get:function(what){
-            if(what==='value'){
+        get: function (what) {
+            if (what === 'value') {
                 var self = this,
                     editor = self.getEditor(),
 
@@ -218,23 +228,23 @@ define([
                 editor = this.getEditor(),
                 session = this.editorSession;
 
-            if(key ==='iconClass'){
+            if (key === 'iconClass') {
                 var _parent = this._parent;
-                if(_parent && _parent.icon){
+                if (_parent && _parent.icon) {
                     this._parent.icon(value);
                 }
             }
 
-            if(editor && session) {
+            if (editor && session) {
                 //console.log('set ace option ' + key,value);
                 var node = editor.container;
-                if(key =='item'){
+                if (key == 'item') {
                     session.setUseWorker(false);
                     self.getContent(value,
                         function (content) {
                             //console.error('update edito!' + file.path);
                             var newMode = self._getMode(value.path);
-                            self.set('value',content);
+                            self.set('value', content);
                             //self.set('mode',newMode);
                             self.setMode(newMode);
                             session.setUseWorker(self.options.useWorker);
@@ -307,7 +317,7 @@ define([
                 else if (key == "showGutter") {
                     editor.renderer.setShowGutter(value);
                 }
-            }else{
+            } else {
 
                 console.warn('have no editor or session');
 
@@ -346,15 +356,15 @@ define([
             }
             return ext;
         },
-        setOptions:function(options){
+        setOptions: function (options) {
             this.options = options;
 
-            _.each(options,function(value,name){
-                this.set(name,value);
-            },this);
+            _.each(options, function (value, name) {
+                this.set(name, value);
+            }, this);
 
             var editor = this.getEditor();
-            if(editor && options.aceOptions){
+            if (editor && options.aceOptions) {
                 editor.setOptions(options.aceOptions);
                 editor.session.setUseWorker(options.useWorker);
                 editor.setOptions({
@@ -366,16 +376,16 @@ define([
             }
             return this.options;
         },
-        getOptions:function(){
+        getOptions: function () {
             return this.options;
         },
-        onContentChange:function(){
+        onContentChange: function () {
 
         },
         onDidChange: function () {
             this.onContentChange(this.get('value') !== this.lastSavedContent);
         },
-        getDefaultOptions:function(value,mixin){
+        getDefaultOptions: function (value, mixin) {
 
             var thiz = this;
             return utils.mixin({
@@ -392,11 +402,11 @@ define([
                 showGutter: true,
                 useWorker: true,
                 //className: 'editor-ace ace_editor',
-                fileName:'none',
-                mode:'javascript',
-                value:value || this.value || 'No value',
-                theme:'idle_fingers',
-                splits:1,
+                fileName: 'none',
+                mode: 'javascript',
+                value: value || this.value || 'No value',
+                theme: 'idle_fingers',
+                splits: 1,
                 aceOptions: {
                     enableBasicAutocompletion: true,
                     enableSnippets: true,
@@ -415,17 +425,17 @@ define([
                 onPrefsChanged: function () {
                     thiz.setPreferences && thiz.setPreferences();
                 }
-            },mixin || {});
+            }, mixin || {});
         },
-        getEditor:function(index){
+        getEditor: function (index) {
 
-            if(this.split){
-                return index==null ? this.split.getCurrentEditor() : this.split.getEditor(index !=null ? index : 0 );
-            }else if(this.editor){
+            if (this.split) {
+                return index == null ? this.split.getCurrentEditor() : this.split.getEditor(index != null ? index : 0);
+            } else if (this.editor) {
                 return this.editor;
             }
         },
-        resize:function(what,target,event){
+        resize: function (what, target, event) {
 
             var options = this.options || {};
 
@@ -437,25 +447,26 @@ define([
                     widget = this.split || this.editor;
 
 
-                if( !editor || !this.aceNode || !editor.container){
+                if (!editor || !this.aceNode || !editor.container) {
                     console.error('invalid DOM! ' + this.id + ' ' + this.value);
                     this['resize_debounced'].cancel();
-                    this['resize_debounced']=null;
+                    this['resize_debounced'] = null;
                     return;
                 }
 
-                editor && utils.resizeTo(editor.container,this.aceNode, true, true);
+                editor && utils.resizeTo(editor.container, this.aceNode, true, true);
                 return widget ? widget.resize() : null;
             }
-            return this.debounce('resize',_resize.bind(this),options.resizeDelay||300,null);
+
+            return this.debounce('resize', _resize.bind(this), options.resizeDelay || 300, null);
 
         },
-        getAce:function(){
+        getAce: function () {
             return this.getEditor();
         },
-        addBasicCommands:function(editor){
+        addBasicCommands: function (editor) {
 
-            editor = editor  || this.getEditor();
+            editor = editor || this.getEditor();
 
             var config = this._aceConfig,
                 thiz = this;
@@ -515,7 +526,7 @@ define([
                 }
             ]);
         },
-        onEditorCreated:function(editor,options){
+        onEditorCreated: function (editor, options) {
 
             var thiz = this;
             editor.getSelectedText = function () {
@@ -531,24 +542,24 @@ define([
             editor.$blockScrolling = true;
 
         },
-        destroy:function(){
+        destroy: function () {
 
             //this.inherited(arguments);
             var editor = this.getEditor();
             editor && editor.destroy();
             var _resize = this['resize_debounced'];
-            if(_resize){
+            if (_resize) {
                 _resize.cancel();
             }
         },
-        createEditor:function(_options,value){
+        createEditor: function (_options, value) {
 
             this.set('iconClass', this.iconClassNormal);
 
-            if(this.editor || this.split){
+            if (this.editor || this.split) {
                 return this.editor || this.split;
             }
-            console.log('create editor!',this);
+            console.log('create editor!', this);
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -561,13 +572,12 @@ define([
             var options = this.getDefaultOptions(value);
 
             //apply overrides
-            utils.mixin(options,_options);
+            utils.mixin(options, _options);
 
             //apply settings from persistence store
-            utils.mixin(options,settings);
+            utils.mixin(options, settings);
 
             options.mode = this._getMode(options.fileName);
-
 
 
             //console.log('create editor with options! ' + options.mode,options);
@@ -578,13 +588,13 @@ define([
             //
 
 
-            var node = options.targetNode  ||  domConstruct.create('div');
+            var node = options.targetNode || domConstruct.create('div');
 
             $(node).css({
                 padding: "0",
                 margin: "0",
-                height:'100%',
-                width:'100%'
+                height: '100%',
+                width: '100%'
                 //"className": "editor-ace ace_editor ace-codebox-dark ace_dark"
             });
 
@@ -613,17 +623,16 @@ define([
                 this.editor = editor = split.getEditor(0);
                 this.editorSession = this.editor.getSession();
 
-                if(value){
+                if (value) {
                     this.editorSession.setValue(value);
                 }
                 //container = editor.container;
                 //utils.resizeTo(container,this.domNode);
                 //split && split.resize();
                 split && split.setSplits(options.splits);
-            }catch(e){
+            } catch (e) {
                 debugger;
             }
-
 
 
             //console.log('split',this.split);
@@ -631,7 +640,7 @@ define([
 
 
             this.setOptions(options);
-            this.onEditorCreated(editor,options);
+            this.onEditorCreated(editor, options);
             return editor;
         },
         addAutoCompleter: function (list) {
@@ -651,7 +660,7 @@ define([
                     }
 
                     callback(null, list.map(function (ea) {
-                        return {name: ea.value, value: ea.word, meta:ea.meta}
+                        return {name: ea.value, value: ea.word, meta: ea.meta}
                     }));
                 }
             };
@@ -662,9 +671,9 @@ define([
     /**
      *
      */
-    var EditorClass = dcl(null,{
-        declaredClass:'xace/views/ACE',
-        onLoaded:function(){
+    var EditorClass = dcl(null, {
+        declaredClass: 'xace/views/ACE',
+        onLoaded: function () {
             this.set('iconClass', this.iconClassNormal);
         },
         startup: function () {
@@ -686,20 +695,20 @@ define([
             var self = this,
                 options = this.options || {};
 
-            if(!this.item && this.value==null){
+            if (!this.item && this.value == null) {
                 console.error('invalid editor args ');
                 //this.value = "";
                 return;
             }
 
 
-            function createEditor(options,value){
-                self.createEditor(self.options || options,value);
+            function createEditor(options, value) {
+                self.createEditor(self.options || options, value);
             }
 
 
-            if (this.value!=null) {
-                createEditor(null,this.value);
+            if (this.value != null) {
+                createEditor(null, this.value);
             } else {
 
                 //we have no content yet, call in _TextEditor::getContent, this will be forwarded
@@ -709,12 +718,12 @@ define([
                     function (content) {//onSuccess
                         //thiz.set('iconClass', thiz.iconClassNormal);//
                         self.lastSavedContent = content;
-                        createEditor(options,content);
+                        createEditor(options, content);
                     },
                     function (e) {//onError
 
-                        createEditor(null,'');
-                        logError(e,'error loading content from file');
+                        createEditor(null, '');
+                        logError(e, 'error loading content from file');
                     }
                 );
             }
@@ -723,7 +732,7 @@ define([
     });
 
 
-    var Module = dcl([containerClass,EditorClass,EditorInterfaceImplementation],{});
+    var Module = dcl([containerClass, EditorClass, EditorInterfaceImplementation], {});
 
     Module.EditorImplementation = EditorInterfaceImplementation;
     Module.Editor = EditorClass;

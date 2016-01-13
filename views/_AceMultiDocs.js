@@ -1,11 +1,12 @@
 define([
+    "dcl/dcl",
     "dojo/_base/declare",
     "require",
     "exports",
     "module",
-    "xide/ace/base_handler",
-    "xide/ace/complete_util"
-],function (declare,require,exports,module,baseLanguageHandler,completeUtil){
+    "xace/base_handler",
+    "xace/complete_util"
+],function (dcl,declare,require,exports,module,baseLanguageHandler,completeUtil){
 
 
     /*
@@ -160,8 +161,9 @@ define([
         callback(null,completions);
     };
 
-    return declare("xide.views._AceMultiDocs",null,{
+    var Module  = dcl(null,{
 
+        declaredClass:"xide.views._AceMultiDocs",
         didAddMCompleter:false,
         multiFileCompleter:null,
         addFileCompleter:function(){
@@ -176,4 +178,8 @@ define([
             return compl;
         }
     });
+
+    Module.completer = completer;
+
+    return Module;
 });
