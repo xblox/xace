@@ -167,6 +167,7 @@ define([
         },
         setMode: function (mode, _ctx, cb) {
 
+
             var ctx = _ctx || this.ctx;
 
             if (ctx && ctx.getResourceManager()) {
