@@ -389,6 +389,7 @@ define([
         getDefaultOptions: function (value, mixin) {
 
             var thiz = this;
+
             return utils.mixin({
                 region: "center",
                 /*value: value,*/
