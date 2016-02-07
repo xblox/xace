@@ -380,14 +380,17 @@ define([
                     group: 'View'
                 }));
 
-                actions.push(this.createAction({
-                    label: 'Themes',
-                    command: EDITOR_THEMES,
-                    icon: 'fa-paint-brush',
-                    group: 'View'
-                }));
+                if(DefaultActions.hasAction(permissions,EDITOR_THEMES)) {
 
-                self._addThemes && self._addThemes(actions);
+                    actions.push(this.createAction({
+                        label: 'Themes',
+                        command: EDITOR_THEMES,
+                        icon: 'fa-paint-brush',
+                        group: 'View'
+                    }));
+
+                    self._addThemes && self._addThemes(actions);
+                }
 
 
                 actions.push(this.createAction({
