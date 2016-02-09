@@ -212,6 +212,9 @@ define([
                 }else{
 
                     if(toolbar) {
+
+                        toolbar.resize();
+
                         var $toolbar = $(toolbar.domNode);
                         topOffset = $toolbar.position().top + $toolbar.outerHeight(true);
                     }
@@ -232,7 +235,7 @@ define([
                     aceNode.height('inherited');
                 }
 
-                aceNode.css('top',topOffset);
+                //aceNode.css('top',topOffset);
             },
             __set:function(what,value){
                 var _res = this.inherited(arguments);
