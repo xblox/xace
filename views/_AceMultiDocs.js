@@ -1,18 +1,10 @@
 define([
     "dcl/dcl",
-    "dojo/_base/declare",
-    "require",
-    "exports",
+    "xdojo/declare",
     "module",
     "xace/base_handler",
     "xace/complete_util"
-],function (dcl,declare,require,exports,module,baseLanguageHandler,completeUtil){
-
-
-    /*
-    var completeUtil = require("plugins/c9.ide.language/complete_util");
-
-    var baseLanguageHandler = require('plugins/c9.ide.language/base_handler');*/
+],function (dcl,declare,module,baseLanguageHandler,completeUtil){
 
     var analysisCache = {}; // path => {identifier: 3, ...}
     var globalWordIndex = {}; // word => frequency

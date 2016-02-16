@@ -9,7 +9,7 @@ define([
             return _splitProto;
         }
 
-        "use strict";
+
 
         var require = ace.require;
         var oop = require("ace/lib/oop");
@@ -379,7 +379,6 @@ define([
         /*});*/
         return _splitProto;
     };
-
     var Module = dcl(null,{
         declaredClass:'xace/views/Split'
     });

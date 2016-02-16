@@ -131,7 +131,6 @@ var profile = {
         // Files that should not be copied when the “mini” compiler flag is set to true.
         miniExclude: function (filename, mid) {
             if(filename){
-
                 if(filename.indexOf('metadata')!=-1){
                     return true;
                 }

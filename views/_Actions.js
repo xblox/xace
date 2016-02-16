@@ -3,13 +3,14 @@ define([
     'dcl/dcl',
     'xide/utils',
     'xide/types',
+    'xide/types/Types', //  <--important fof build
     'xide/mixins/ActionProvider',
-    './ACEEditor',
+    'xace/views/ACEEditor',
     'xide/action/Toolbar',
     'xide/action/DefaultActions'
 
 
-], function (dcl,utils, types, ActionProvider,
+], function (dcl,utils, types,iTypes,ActionProvider,
              ACEEditor,
              Toolbar, DefaultActions) {
 
