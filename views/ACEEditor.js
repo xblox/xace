@@ -396,19 +396,25 @@ define([
                 style: "margin: 0; padding: 0; position:relative;overflow: auto;height:inherit;width:inherit;text-align:left;",
                 readOnly: false,
                 tabSize: 2,
-                softTabs: false,
                 wordWrap: false,
                 showPrintMargin: false,
                 highlightActiveLine: true,
                 fontSize: 16,
                 showGutter: true,
+                showLineNumbers:true,
                 useWorker: true,
+                showInvisibles:false,
+                displayIndentGuides:true,
+                useSoftTabs:true,
                 //className: 'editor-ace ace_editor',
                 fileName: 'none',
                 mode: 'javascript',
                 value: value || this.value || 'No value',
                 theme: 'idle_fingers',
                 splits: 1,
+                useElasticTabstops:false,
+                animatedScroll:false,
+                highlightActive:true,
                 aceOptions: {
                     enableBasicAutocompletion: true,
                     enableSnippets: true,
@@ -554,6 +560,24 @@ define([
                 _resize.cancel();
             }
         },
+        getOptionsMixed:function(_options){
+
+            var settings = this.getPreferences ? this.getPreferences() : {},
+                thiz = this;
+
+            var options = this.getDefaultOptions(this.value,_options || this.options);
+
+            //apply overrides
+            utils.mixin(options, _options);
+
+            //apply settings from persistence store
+            utils.mixin(options, settings);
+
+            options.mode = this._getMode(options.fileName);
+
+            return options;
+
+        },
         createEditor: function (_options, value) {
 
             this.set('iconClass', this.iconClassNormal);
@@ -683,7 +707,7 @@ define([
             if (this.permissions) {
                 var _defaultActions = DefaultActions.getDefaultActions(this.permissions, this, this);
 
-                _defaultActions = _defaultActions.concat(this.getActions(this.permissions));
+                _defaultActions = _defaultActions.concat(this.getEditorActions(this.permissions));
 
                 this.addActions(_defaultActions);
             }

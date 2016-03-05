@@ -295,22 +295,42 @@ define([
 
                 if (command.indexOf(EDITOR_SETTINGS) != -1) {
 
+
                     var key = action.option,
                         option = editor.getOption(action.option),
+
                         isBoolean = _.isBoolean(option);
 
+
+
+                    console.log('set ace option ' + key + ' = ' + option);
+
+
+
                     if (option == null) {
-                        console.error('option does not exists! ' + action.option);
+                        //console.error('option does not exists! ' + action.option);
+                    }
+
+                    if(key==='highlightActive'){
+                        editor.setHighlightActiveLine(!editor.getHighlightActiveLine());
+                        return;
                     }
 
                     if (isBoolean) {
                         editor.setOption(action.option, !option);
                     } else {
-                        if(key==='wrap'){
+                        if(key==='wordWrap'){
                             var mode = session.getUseWrapMode();
+                            this.set('wordWrap',!mode);
+                            return true;
+                        }
+                        /*
+                        if(key==='printMargin'){
+                            var mode = session.getShowPrintMargin();
                             this.set('wordWrap',!mode);
                             return
                         }
+                        */
 
                         if(option==='off' || option ==='on'){
                             editor.setOption(key, option ==='off' ? 'on' : 'off' );
@@ -325,7 +345,7 @@ define([
 
                 return this.inherited(arguments);
             },
-            getActions: function (permissions) {
+            getEditorActions: function (permissions) {
 
                 var actions = [],
                     self = this,
