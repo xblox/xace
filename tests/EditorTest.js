@@ -572,8 +572,8 @@ define([
 
                 }
 
-                console.error('--add actions');
-                console.dir(this);
+                //console.error('--add actions');
+                //console.dir(this);
 
 
                 var _params = {
@@ -582,13 +582,11 @@ define([
                         var options=self.getOptionsMixed();
                         var option = this.option;
 
-
-
                         var optionValue = options[option];
 
                         //console.error('on Create ' + optionValue);
 
-                        console.error('on Create ' + option + ' = ' +optionValue);
+                        //console.error('on Create ' + option + ' = ' +optionValue);
                         if(optionValue!==null){
                             action.set('value',optionValue);
                         }
@@ -596,13 +594,9 @@ define([
                     },
                     onChange:function(property,value){
 
-                        console.error('on change ' + property + ' | ' + value);
+                        //console.error('on change ' + property + ' | ' + value);
                         //this.set('value',value);
-
                         var option = this.option;
-
-
-                        //thiz.showHeader = value;
                         this.value = value;
                         self.runAction(this);
                     }

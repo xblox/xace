@@ -358,7 +358,7 @@ define([
 
                 return this.inherited(arguments);
             },
-            getEditorActions: function (permissions) {
+            __getEditorActions: function (permissions) {
 
                 var actions = [],
                     self = this,
@@ -531,6 +531,227 @@ define([
                 return actions;
 
             },
+            getEditorActions: function (permissions) {
+
+            var actions = [],
+                self = this,
+                ACTION = types.ACTION,
+                ICON = types.ACTION_ICON,
+                VISIBILITY = types.ACTION_VISIBILITY;
+
+
+            actions.push(this.createAction({
+                label: 'Reload',
+                command: ACTION.RELOAD,
+                icon: ICON.RELOAD,
+                keycombo: 'ctrl r'
+            }));
+
+
+            actions.push(this.createAction({
+                label: 'Save',
+                command: ACTION.SAVE,
+                icon: ICON.SAVE,
+                keycombo: 'ctrl s',
+                group: 'File'
+            }));
+
+            actions.push(this.createAction({
+                label: 'Find',
+                command: ACTION.FIND,
+                icon: ICON.SEARCH,
+                keycombo: 'ctrl f',
+                group: 'Search'
+            }));
+
+            actions.push(this.createAction({
+                label: 'Fullscreen',
+                command: ACTION.FULLSCREEN,
+                icon: ICON.MAXIMIZE,
+                keycombo: 'ctrl f11',
+                group: 'View'
+            }));
+
+
+            actions.push(this.createAction({
+                label: 'Increase Fontsize',
+                command: INCREASE_FONT_SIZE,
+                icon: 'fa-text-height',
+                group: 'View'
+            }));
+
+            actions.push(this.createAction({
+                label: 'Decrease Fontsize',
+                command: DECREASE_FONT_SIZE,
+                icon: 'fa-text-height',
+                group: 'View'
+            }));
+
+            if(DefaultActions.hasAction(permissions,EDITOR_THEMES)) {
+
+                actions.push(this.createAction({
+                    label: 'Themes',
+                    command: EDITOR_THEMES,
+                    icon: 'fa-paint-brush',
+                    group: 'View'
+                }));
+
+                self._addThemes && self._addThemes(actions);
+            }
+
+
+            actions.push(this.createAction({
+                label: 'Help',
+                command: EDITOR_HELP,
+                icon: 'fa-question',
+                keycombo: 'f1'
+            }));
+
+            /*
+             actions.push(this.createAction({
+             label: 'Snippets',
+             command: SNIPPETS,
+             icon: 'fa-paper-plane',
+             group: "Show"
+             }));
+
+             actions.push(this.createAction({
+             label: 'Console',
+             command: EDITOR_CONSOLE,
+             icon: 'fa-terminal',
+             group: 'Show'
+             }));
+             */
+
+
+            ///editor settings
+            actions.push(this.createAction({
+                label: 'Settings',
+                command: EDITOR_SETTINGS,
+                icon: 'fa-cogs',
+                group: "Settings"
+            }));
+
+            function _createSettings(label, command, icon, option, mixin,group,actionType,params) {
+
+                command = command || EDITOR_SETTINGS + '/' + label;
+
+                mixin = mixin || {};
+
+                command = command || EDITOR_SETTINGS + '/' + label;
+
+                mixin = mixin || {};
+
+                var action = self.createAction(utils.mixin({
+                    label:label,
+                    command:command,
+                    icon: icon || 'fa-cogs',
+                    group:group || "Settings",
+                    mixin:utils.mixin({
+                        addPermission:true,
+                        option:option,
+                        actionType:actionType,
+                        owner:self
+                    },mixin)
+                },params));
+
+                actions.push(action);
+                return action;
+
+            }
+
+            //console.error('--add actions');
+            //console.dir(this);
+
+
+            var _params = {
+                onCreate:function(action){
+
+                    var options=self.getOptionsMixed();
+                    var option = this.option;
+
+                    var optionValue = options[option];
+
+                    //console.error('on Create ' + optionValue);
+
+                    //console.error('on Create ' + option + ' = ' +optionValue);
+                    if(optionValue!==null){
+                        action.set('value',optionValue);
+                    }
+
+                },
+                onChange:function(property,value){
+
+                    //console.error('on change ' + property + ' | ' + value);
+                    //this.set('value',value);
+                    var option = this.option;
+                    this.value = value;
+                    self.runAction(this);
+                }
+            };
+
+
+
+            _createSettings('Show Gutters', null, null, 'showGutter',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+            _createSettings('Show Print Margin', null, null, 'showPrintMargin',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+            _createSettings('Display Intend Guides', null, null, 'displayIndentGuides',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+            _createSettings('Show Line Numbers', null, null, 'showLineNumbers',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+
+            _createSettings('Show Indivisibles', null, null, 'showInvisibles',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+
+            _createSettings('Use Soft Tabs', null, null, 'useSoftTabs',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+            _createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+
+            //_createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops');
+            _createSettings('Animated Scroll', null, null, 'animatedScroll',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+            _createSettings('Word Wrap',null,null,'wordWrap',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+            _createSettings('Highlight Active Line',null,null,'highlightActive',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
+
+
+
+
+            /*
+             var keybindings = {
+             ace: null, // Null = use "default" keymapping
+             vim: ace.require("ace/keyboard/vim").handler,
+             emacs: "ace/keyboard/emacs"
+             };
+             */
+
+            /*
+             actions.push(this.createAction({
+             label: 'Keyboard',
+             command: KEYBOARD,
+             icon: 'fa-keyboard-o',
+             group: "Settings"
+             }));
+
+             if(DefaultActions.hasAction(permissions,KEYBOARD)){
+             _createSettings('Default', KEYBOARD + '/Default', null, 'ace');
+             _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
+             _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
+             }
+             */
+
+            if(DefaultActions.hasAction(permissions,LAYOUT)) {
+                actions.push(this.createAction({
+                    label: 'Split',
+                    command: 'View/Layout',
+                    icon: 'fa-columns',
+                    group: "View"
+                }));
+                //layout
+                actions.push(_createSettings('None', 'View/Layout/None', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View',types.ACTION_TYPE.SINGLE_TOGGLE));
+                actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View',types.ACTION_TYPE.SINGLE_TOGGLE));
+                actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View',types.ACTION_TYPE.SINGLE_TOGGLE));
+                //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
+            }
+
+
+
+            return actions;
+
+        },
             _addThemes: function (actions) {
 
                 var themes = this.getThemeData(),
