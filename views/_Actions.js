@@ -131,7 +131,8 @@ define([
 
                 var node = this.domNode,
                     $node = $(node),
-                    thiz = this;
+                    thiz = this,
+                    _toolbar = this.getToolbar();
 
                 if (!this._isMaximized) {
 
@@ -176,6 +177,14 @@ define([
 
 
 
+                    //console.error('maximize');
+
+
+
+                    if(_toolbar){
+                        _toolbar._unfollow(this.header);
+                    }
+
 
 
                 } else {
@@ -183,6 +192,10 @@ define([
                     $node.removeClass('AceEditorPaneFullScreen');
                     this._lastParent.appendChild(node);
                     utils.destroy(this._maximizeContainer);
+                    if(_toolbar){
+                        _toolbar._follow();
+                    }
+
                 }
                 this.onMaximized(this._isMaximized);
                 return true;
