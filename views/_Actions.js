@@ -10,7 +10,7 @@ define([
     'xide/action/DefaultActions'
 
 
-], function (dcl,utils, types,iTypes,ActionProvider,
+], function (dcl, utils, types, iTypes, ActionProvider,
              ACEEditor,
              Toolbar, DefaultActions) {
 
@@ -46,16 +46,14 @@ define([
         ];
 
 
-
-
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
      */
-    var Module = dcl([ACEEditor, Toolbar.dcl, ActionProvider.dcl],{
+    var Module = dcl([ACEEditor, Toolbar.dcl, ActionProvider.dcl], {
             permissions: DEFAULT_PERMISSIONS,
-            _searchBoxOpen:false,
-            onSingleView:function(){
+            _searchBoxOpen: false,
+            onSingleView: function () {
 
             },
             setSplitMode: function (mode) {
@@ -97,7 +95,7 @@ define([
             onMaximized: function (maximized) {
 
                 var parent = this.getParent();
-                if(maximized==false) {
+                if (maximized == false) {
                     if (parent && parent.resize) {
                         parent.resize();
                     }
@@ -114,10 +112,10 @@ define([
                 }
 
 
-                if(maximized==false) {
+                if (maximized == false) {
                     this.resize();
                     parent && utils.resizeTo(this, parent, true, true);
-                }else{
+                } else {
 
                 }
 
@@ -176,15 +174,12 @@ define([
                     });
 
 
-
                     //console.error('maximize');
 
 
-
-                    if(_toolbar){
+                    if (_toolbar) {
                         _toolbar._unfollow(this.header);
                     }
-
 
 
                 } else {
@@ -192,7 +187,7 @@ define([
                     $node.removeClass('AceEditorPaneFullScreen');
                     this._lastParent.appendChild(node);
                     utils.destroy(this._maximizeContainer);
-                    if(_toolbar){
+                    if (_toolbar) {
                         _toolbar._follow();
                     }
 
@@ -203,13 +198,13 @@ define([
             save: function (item) {
                 var res = this.saveContent(this.get('value'), item);
                 var thiz = this;
-                setTimeout(function() {
-                	var _ed = thiz.getEditor();
-                	if(_ed){
-                		_ed.focus();
-                	}
+                setTimeout(function () {
+                    var _ed = thiz.getEditor();
+                    if (_ed) {
+                        _ed.focus();
+                    }
                 }, 600);
-                
+
                 return res;
             },
             runAction: function (action) {
@@ -227,19 +222,19 @@ define([
                     result = false;
 
 
-                if(command.indexOf(LAYOUT)!=-1){
+                if (command.indexOf(LAYOUT) != -1) {
                     self.setSplitMode(action.option, null);
                 }
 
 
-
-
                 switch (command) {
-                    case INCREASE_FONT_SIZE:{
+                    case INCREASE_FONT_SIZE:
+                    {
                         editor.setFontSize(editor.getFontSize() + 1);
                         return true;
                     }
-                    case DECREASE_FONT_SIZE:{
+                    case DECREASE_FONT_SIZE:
+                    {
                         editor.setFontSize(editor.getFontSize() - 1);
                         return true;
                     }
@@ -265,12 +260,12 @@ define([
 
                         function _search(sb) {
                             var shown = self._searchBoxOpen;
-                            if(!shown) {
+                            if (!shown) {
                                 sb.show(editor.session.getTextRange(), null);
-                                self._searchBoxOpen=true;
-                            }else{
+                                self._searchBoxOpen = true;
+                            } else {
                                 sb.hide();
-                                self._searchBoxOpen=false;
+                                self._searchBoxOpen = false;
                             }
                         }
 
@@ -315,16 +310,14 @@ define([
                         isBoolean = _.isBoolean(option);
 
 
-
                     console.log('set ace option ' + key + ' = ' + option);
-
 
 
                     if (option == null) {
                         //console.error('option does not exists! ' + action.option);
                     }
 
-                    if(key==='highlightActive'){
+                    if (key === 'highlightActive') {
                         editor.setHighlightActiveLine(!editor.getHighlightActiveLine());
                         return;
                     }
@@ -332,22 +325,22 @@ define([
                     if (isBoolean) {
                         editor.setOption(action.option, !option);
                     } else {
-                        if(key==='wordWrap'){
+                        if (key === 'wordWrap') {
                             var mode = session.getUseWrapMode();
-                            this.set('wordWrap',!mode);
+                            this.set('wordWrap', !mode);
                             return true;
                         }
                         /*
-                        if(key==='printMargin'){
-                            var mode = session.getShowPrintMargin();
-                            this.set('wordWrap',!mode);
-                            return
-                        }
-                        */
+                         if(key==='printMargin'){
+                         var mode = session.getShowPrintMargin();
+                         this.set('wordWrap',!mode);
+                         return
+                         }
+                         */
 
-                        if(option==='off' || option ==='on'){
-                            editor.setOption(key, option ==='off' ? 'on' : 'off' );
-                        }else {
+                        if (option === 'off' || option === 'on') {
+                            editor.setOption(key, option === 'off' ? 'on' : 'off');
+                        } else {
                             editor.setOption(action.option, false);
                         }
                     }
@@ -358,7 +351,7 @@ define([
 
                 return this.inherited(arguments);
             },
-            __getEditorActions: function (permissions) {
+            getEditorActions: function (permissions) {
 
                 var actions = [],
                     self = this,
@@ -414,13 +407,21 @@ define([
                     group: 'View'
                 }));
 
-                if(DefaultActions.hasAction(permissions,EDITOR_THEMES)) {
+                if (DefaultActions.hasAction(permissions, EDITOR_THEMES)) {
 
                     actions.push(this.createAction({
                         label: 'Themes',
                         command: EDITOR_THEMES,
                         icon: 'fa-paint-brush',
-                        group: 'View'
+                        group: 'View',
+                        mixin:{
+                            closeOnClick:false
+                        },
+                        onCreate:function(action){
+
+                            var options = self.getDefaultOptions();
+                            action.set('value',options.theme);
+                        }
                     }));
 
                     self._addThemes && self._addThemes(actions);
@@ -434,21 +435,6 @@ define([
                     keycombo: 'f1'
                 }));
 
-/*
-                actions.push(this.createAction({
-                    label: 'Snippets',
-                    command: SNIPPETS,
-                    icon: 'fa-paper-plane',
-                    group: "Show"
-                }));
-
-                actions.push(this.createAction({
-                    label: 'Console',
-                    command: EDITOR_CONSOLE,
-                    icon: 'fa-terminal',
-                    group: 'Show'
-                }));
-                */
 
 
                 ///editor settings
@@ -459,7 +445,7 @@ define([
                     group: "Settings"
                 }));
 
-                function _createSettings(label, command, icon, option, mixin,group) {
+                function _createSettings(label, command, icon, option, mixin, group, actionType, params) {
 
                     command = command || EDITOR_SETTINGS + '/' + label;
 
@@ -469,30 +455,66 @@ define([
 
                     mixin = mixin || {};
 
-                    actions.push(self.createAction({
-                        label:label,
-                        command:command,
+                    var action = self.createAction(utils.mixin({
+                        label: label,
+                        command: command,
                         icon: icon || 'fa-cogs',
-                        group:group || "Settings",
-                        mixin:utils.mixin({
-                            addPermission:true,
-                            option:option
-                        },mixin)
-                    }));
+                        group: group || "Settings",
+                        mixin: utils.mixin({
+                            addPermission: true,
+                            option: option,
+                            actionType: actionType,
+                            owner: self
+                        }, mixin)
+                    }, params));
+
+                    actions.push(action);
+                    return action;
 
                 }
 
-                _createSettings('Show Gutters', null, null, 'showGutter');
-                _createSettings('Show Print Margin', null, null, 'printMargin');
-                _createSettings('Display Intend Guides', null, null, 'displayIndentGuides');
-                _createSettings('Show Line Numbers', null, null, 'showLineNumbers');
 
-                _createSettings('Show Invisibles', null, null, 'showInvisibles');
+                var _params = {
+                    onCreate: function (action) {
 
-                _createSettings('Use Soft Tabs', null, null, 'useSoftTabs');
+                        var options = self.getOptionsMixed();
+                        var option = this.option;
+
+                        var optionValue = options[option];
+
+                        //console.error('on Create ' + optionValue);
+
+                        //console.error('on Create ' + option + ' = ' +optionValue);
+                        if (optionValue !== null) {
+                            action.set('value', optionValue);
+                        }
+
+                    },
+                    onChange: function (property, value) {
+
+                        //console.error('on change ' + property + ' | ' + value);
+                        //this.set('value',value);
+                        var option = this.option;
+                        this.value = value;
+                        self.runAction(this);
+                    }
+                };
+
+
+                _createSettings('Show Gutters', null, null, 'showGutter', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+                _createSettings('Show Print Margin', null, null, 'showPrintMargin', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+                _createSettings('Display Intend Guides', null, null, 'displayIndentGuides', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+                _createSettings('Show Line Numbers', null, null, 'showLineNumbers', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+
+                _createSettings('Show Indivisibles', null, null, 'showInvisibles', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+
+                _createSettings('Use Soft Tabs', null, null, 'useSoftTabs', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+                _createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+
                 //_createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops');
-                _createSettings('Animated Scroll', null, null, 'animatedScroll');
-                _createSettings('Word Wrap',null,null,'wrap');
+                _createSettings('Animated Scroll', null, null, 'animatedScroll', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+                _createSettings('Word Wrap', null, null, 'wordWrap', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
+                _createSettings('Highlight Active Line', null, null, 'highlightActive', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
 
 
                 /*
@@ -503,258 +525,39 @@ define([
                  };
                  */
 
-/*
-                actions.push(this.createAction({
-                    label: 'Keyboard',
-                    command: KEYBOARD,
-                    icon: 'fa-keyboard-o',
-                    group: "Settings"
-                }));
+                /*
+                 actions.push(this.createAction({
+                 label: 'Keyboard',
+                 command: KEYBOARD,
+                 icon: 'fa-keyboard-o',
+                 group: "Settings"
+                 }));
 
-                if(DefaultActions.hasAction(permissions,KEYBOARD)){
-                    _createSettings('Default', KEYBOARD + '/Default', null, 'ace');
-                    _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
-                    _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
-                }
-                */
+                 if(DefaultActions.hasAction(permissions,KEYBOARD)){
+                 _createSettings('Default', KEYBOARD + '/Default', null, 'ace');
+                 _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
+                 _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
+                 }
+                 */
 
-                if(DefaultActions.hasAction(permissions,LAYOUT)) {
+                if (DefaultActions.hasAction(permissions, LAYOUT)) {
+                    actions.push(this.createAction({
+                        label: 'Split',
+                        command: 'View/Layout',
+                        icon: 'fa-columns',
+                        group: "View"
+                    }));
                     //layout
-                    actions.push(_createSettings('Layout', 'View/Layout/None', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View'));
-                    actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View'));
-                    actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View'));
+                    actions.push(_createSettings('None', 'View/Layout/None', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
                     //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
                 }
-
 
 
                 return actions;
 
             },
-            getEditorActions: function (permissions) {
-
-            var actions = [],
-                self = this,
-                ACTION = types.ACTION,
-                ICON = types.ACTION_ICON,
-                VISIBILITY = types.ACTION_VISIBILITY;
-
-
-            actions.push(this.createAction({
-                label: 'Reload',
-                command: ACTION.RELOAD,
-                icon: ICON.RELOAD,
-                keycombo: 'ctrl r'
-            }));
-
-
-            actions.push(this.createAction({
-                label: 'Save',
-                command: ACTION.SAVE,
-                icon: ICON.SAVE,
-                keycombo: 'ctrl s',
-                group: 'File'
-            }));
-
-            actions.push(this.createAction({
-                label: 'Find',
-                command: ACTION.FIND,
-                icon: ICON.SEARCH,
-                keycombo: 'ctrl f',
-                group: 'Search'
-            }));
-
-            actions.push(this.createAction({
-                label: 'Fullscreen',
-                command: ACTION.FULLSCREEN,
-                icon: ICON.MAXIMIZE,
-                keycombo: 'ctrl f11',
-                group: 'View'
-            }));
-
-
-            actions.push(this.createAction({
-                label: 'Increase Fontsize',
-                command: INCREASE_FONT_SIZE,
-                icon: 'fa-text-height',
-                group: 'View'
-            }));
-
-            actions.push(this.createAction({
-                label: 'Decrease Fontsize',
-                command: DECREASE_FONT_SIZE,
-                icon: 'fa-text-height',
-                group: 'View'
-            }));
-
-            if(DefaultActions.hasAction(permissions,EDITOR_THEMES)) {
-
-                actions.push(this.createAction({
-                    label: 'Themes',
-                    command: EDITOR_THEMES,
-                    icon: 'fa-paint-brush',
-                    group: 'View'
-                }));
-
-                self._addThemes && self._addThemes(actions);
-            }
-
-
-            actions.push(this.createAction({
-                label: 'Help',
-                command: EDITOR_HELP,
-                icon: 'fa-question',
-                keycombo: 'f1'
-            }));
-
-            /*
-             actions.push(this.createAction({
-             label: 'Snippets',
-             command: SNIPPETS,
-             icon: 'fa-paper-plane',
-             group: "Show"
-             }));
-
-             actions.push(this.createAction({
-             label: 'Console',
-             command: EDITOR_CONSOLE,
-             icon: 'fa-terminal',
-             group: 'Show'
-             }));
-             */
-
-
-            ///editor settings
-            actions.push(this.createAction({
-                label: 'Settings',
-                command: EDITOR_SETTINGS,
-                icon: 'fa-cogs',
-                group: "Settings"
-            }));
-
-            function _createSettings(label, command, icon, option, mixin,group,actionType,params) {
-
-                command = command || EDITOR_SETTINGS + '/' + label;
-
-                mixin = mixin || {};
-
-                command = command || EDITOR_SETTINGS + '/' + label;
-
-                mixin = mixin || {};
-
-                var action = self.createAction(utils.mixin({
-                    label:label,
-                    command:command,
-                    icon: icon || 'fa-cogs',
-                    group:group || "Settings",
-                    mixin:utils.mixin({
-                        addPermission:true,
-                        option:option,
-                        actionType:actionType,
-                        owner:self
-                    },mixin)
-                },params));
-
-                actions.push(action);
-                return action;
-
-            }
-
-            //console.error('--add actions');
-            //console.dir(this);
-
-
-            var _params = {
-                onCreate:function(action){
-
-                    var options=self.getOptionsMixed();
-                    var option = this.option;
-
-                    var optionValue = options[option];
-
-                    //console.error('on Create ' + optionValue);
-
-                    //console.error('on Create ' + option + ' = ' +optionValue);
-                    if(optionValue!==null){
-                        action.set('value',optionValue);
-                    }
-
-                },
-                onChange:function(property,value){
-
-                    //console.error('on change ' + property + ' | ' + value);
-                    //this.set('value',value);
-                    var option = this.option;
-                    this.value = value;
-                    self.runAction(this);
-                }
-            };
-
-
-
-            _createSettings('Show Gutters', null, null, 'showGutter',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-            _createSettings('Show Print Margin', null, null, 'showPrintMargin',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-            _createSettings('Display Intend Guides', null, null, 'displayIndentGuides',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-            _createSettings('Show Line Numbers', null, null, 'showLineNumbers',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-
-            _createSettings('Show Indivisibles', null, null, 'showInvisibles',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-
-            _createSettings('Use Soft Tabs', null, null, 'useSoftTabs',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-            _createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-
-            //_createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops');
-            _createSettings('Animated Scroll', null, null, 'animatedScroll',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-            _createSettings('Word Wrap',null,null,'wordWrap',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-            _createSettings('Highlight Active Line',null,null,'highlightActive',null,null,types.ACTION_TYPE.MULTI_TOGGLE,_params);
-
-
-
-
-
-
-
-            /*
-             var keybindings = {
-             ace: null, // Null = use "default" keymapping
-             vim: ace.require("ace/keyboard/vim").handler,
-             emacs: "ace/keyboard/emacs"
-             };
-             */
-
-            /*
-             actions.push(this.createAction({
-             label: 'Keyboard',
-             command: KEYBOARD,
-             icon: 'fa-keyboard-o',
-             group: "Settings"
-             }));
-
-             if(DefaultActions.hasAction(permissions,KEYBOARD)){
-             _createSettings('Default', KEYBOARD + '/Default', null, 'ace');
-             _createSettings('Vim', KEYBOARD + '/Vim', null, 'vim');
-             _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
-             }
-             */
-
-            if(DefaultActions.hasAction(permissions,LAYOUT)) {
-                actions.push(this.createAction({
-                    label: 'Split',
-                    command: 'View/Layout',
-                    icon: 'fa-columns',
-                    group: "View"
-                }));
-                //layout
-                actions.push(_createSettings('None', 'View/Layout/None', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View',types.ACTION_TYPE.SINGLE_TOGGLE));
-                actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View',types.ACTION_TYPE.SINGLE_TOGGLE));
-                actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View',types.ACTION_TYPE.SINGLE_TOGGLE));
-                //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
-            }
-
-
-
-            return actions;
-
-        },
             _addThemes: function (actions) {
 
                 var themes = this.getThemeData(),
@@ -767,7 +570,14 @@ define([
                         group: 'View',
                         mixin: {
                             addPermission: true,
-                            theme: value
+                            value:value,
+                            theme: value,
+                            closeOnClick:false,
+                            actionType : types.ACTION_TYPE.SINGLE_TOGGLE
+                        },
+                        onCreate:function(action) {
+                            action._oldIcon = icon;
+                            action.set('value', value);
                         }
                     });
                 };
