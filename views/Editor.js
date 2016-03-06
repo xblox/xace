@@ -195,6 +195,7 @@ define([
             },
             resize:function(){
 
+
                 var parent = this.getParent();
                 if(!this._isMaximized) {
                     parent && utils.resizeTo(this, parent, true, true);
