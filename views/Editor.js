@@ -199,6 +199,8 @@ define([
                 var parent = this.getParent();
                 if(!this._isMaximized) {
                     parent && utils.resizeTo(this, parent, true, true);
+                }else{
+                    utils.resizeTo(this, this._maximizeContainer, true, true);
                 }
 
                 var thiz = this,
@@ -206,6 +208,10 @@ define([
                     noToolbar = false,
                     topOffset = 0,
                     aceNode = $(this.aceNode);
+
+                if(this._isMaximized && toolbar) {
+                    utils.resizeTo(toolbar, this.header, true, true);
+                }
 
                 if(!toolbar ||  (toolbar && toolbar.isEmpty())){
                     //$(thiz.header).css('display','none');

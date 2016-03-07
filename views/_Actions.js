@@ -115,6 +115,7 @@ define([
                 if (maximized == false) {
                     this.resize();
                     parent && utils.resizeTo(this, parent, true, true);
+                    this.publish(types.EVENTS.ON_VIEW_MAXIMIZE_END);
                 } else {
 
                 }
@@ -134,6 +135,7 @@ define([
 
                 if (!this._isMaximized) {
 
+                    this.publish(types.EVENTS.ON_VIEW_MAXIMIZE_START);
                     this._isMaximized = true;
                     var vp = $(this.domNode.ownerDocument);
                     var root = $('body')[0];
