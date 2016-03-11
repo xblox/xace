@@ -585,7 +585,7 @@ define([
             if (this.editor || this.split) {
                 return this.editor || this.split;
             }
-            console.log('create editor!', this);
+            //console.log('create editor!', this);
 
             ///////////////////////////////////////////////////////////////////
             //
@@ -657,7 +657,7 @@ define([
                 //split && split.resize();
                 split && split.setSplits(options.splits);
             } catch (e) {
-                debugger;
+                logError(e,'error creating editor');
             }
 
 
