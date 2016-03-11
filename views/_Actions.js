@@ -251,7 +251,8 @@ define([
                     }
                     case ACTION.SAVE:
                     {
-                        return self.save(this.item);
+                        result = self.save(this.item);
+                        break;
                     }
                     case ACTION.FIND:
                     {
@@ -312,9 +313,6 @@ define([
                         isBoolean = _.isBoolean(option);
 
 
-                    console.log('set ace option ' + key + ' = ' + option);
-
-
                     if (option == null) {
                         //console.error('option does not exists! ' + action.option);
                     }
@@ -348,8 +346,6 @@ define([
                     }
                     return true;
                 }
-
-                console.log('run action : ' + action.command);
 
                 return this.inherited(arguments);
             },

@@ -69,6 +69,24 @@ define([
      */
     var Module = dcl([_Actions,ACEEditor,ActionProvider.dcl,Persistence,Toolbar.dcl],{
 
+            tabOrder: {
+                'Home': 100,
+                'View': 50,
+                'Settings': 20
+            },
+            menuOrder: {
+                'File': 110,
+                'Edit': 100,
+                'View': 90,
+                'Block': 50,
+                'Settings': 20,
+                'Navigation': 10,
+                'Editor':9,
+                'Step': 5,
+                'New': 4,
+                'Window': 3,
+                'Help':2
+            },
             declaredClass:'xace/views/Editor',
             options:null,
             /**
@@ -90,7 +108,6 @@ define([
             '<div attachTo="aceNode" class="view-body row" style="height:100%;width: 100%;position: relative;"></div>' +
             '<div attachTo="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
             '</div>',
-
             getContent:function(item,onSuccess,onError){
 
                 if(!this.storeDelegate){
@@ -123,16 +140,8 @@ define([
                     var _s = function(){
 
                         thiz.set('iconClass',thiz.iconClassNormal);
-
                         thiz.lastSavedContent=_value;
-
                         thiz.onContentChange(false);
-
-                        /*
-                        if(onSuccess){
-                            onSuccess(arguments);
-                        }
-                        */
 
                         var struct = {
                             path:thiz.options.filePath,
@@ -267,8 +276,7 @@ define([
                 return this.inherited(arguments);
             }
 
-        }
-    );
+        });
 
     //pass through defaults
     Module.DEFAULT_PERMISSIONS = _Actions.DEFAULT_PERMISSIONS;
