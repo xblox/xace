@@ -68,7 +68,14 @@ define([
      @class module:xgrid/Base
      */
     var Module = dcl([_Actions,ACEEditor,ActionProvider.dcl,Persistence,Toolbar.dcl],{
-
+            getBreadcrumbPath:function(){
+                if(this.item){
+                    return {
+                        //root:utils.replaceAll('/','',this.item.mount),
+                        path:utils.replaceAll('/','',this.item.mount) + ':/' + this.item.path.replace('./','/')
+                    }
+                }
+            },
             tabOrder: {
                 'Home': 100,
                 'View': 50,
