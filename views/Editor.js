@@ -10,6 +10,7 @@ define([
     'xide/action/Toolbar',
     "xide/mixins/PersistenceMixin"
 
+
 ], function (dcl,inherited,types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
 
 
