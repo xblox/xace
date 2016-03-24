@@ -27,7 +27,7 @@ define([
     'xide/widgets/ActionSelectWidget',
     'dijit/MenuItem',
     "dojo/cookie",
-    'xide/bean/Action',
+    'xide/action/Action',
     'xide/mixins/ReloadMixin',
     'xide/mixins/ActionProvider',
     'xide/views/SplitViewMixin',
