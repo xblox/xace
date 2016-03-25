@@ -13,6 +13,6 @@
         }
     ],
     "bugs": "https://gitlab.com/xamiro/xace/issues",
-    "homepage": "https://gitlab.com/xamiro/xace",
+    "homepage": "http://gitlab.com/xamiro/xace",
     "dojoBuild": "layer.profile.js"
 }
