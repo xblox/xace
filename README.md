@@ -1,1 +1,7 @@
-Rework of the XIDE - ACEEditor
+XIDE - ACEEditor, written in AMD format, ready for Dojo applications.
+
+```js
+
+
+
+```
