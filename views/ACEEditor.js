@@ -702,16 +702,19 @@ define([
         onLoaded: function () {
             this.set('iconClass', this.iconClassNormal);
         },
+        getKeyTarget:function(){
+            return this.aceNode;
+        },
         startup: function () {
+
+            this.aceNode.id = utils.createUUID();
 
             if (this.permissions) {
                 var _defaultActions = DefaultActions.getDefaultActions(this.permissions, this, this);
 
                 _defaultActions = _defaultActions.concat(this.getEditorActions(this.permissions));
-
                 this.addActions(_defaultActions);
             }
-
 
             //save icon class normal
             this.iconClassNormal = '' + this.iconClass;
