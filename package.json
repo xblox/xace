@@ -1,11 +1,8 @@
 {
     "name": "xace",
-    "version": "0.1.1",
-    "dependencies": {
-    },
-    "devDependencies": {
-
-    },
+    "version": "0.1.2",
+    "dependencies": {},
+    "devDependencies": {},
     "licenses": [
         {
             "type": "BSD",
