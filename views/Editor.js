@@ -234,13 +234,10 @@ define([
                     //$(thiz.header).css('display','none');
                     noToolbar = true;
                 }else{
-
                     if(toolbar) {
-
                         toolbar.resize();
-
                         var $toolbar = $(toolbar.domNode);
-                        topOffset = $toolbar.position().top + $toolbar.outerHeight(true);
+                        //topOffset = $toolbar.position().top + $toolbar.outerHeight(true);
                     }
                 }
 
@@ -258,8 +255,6 @@ define([
                 } else {
                     aceNode.height('inherited');
                 }
-
-                //aceNode.css('top',topOffset);
             },
             __set:function(what,value){
                 var _res = this.inherited(arguments);
