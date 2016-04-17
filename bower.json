@@ -1,0 +1,30 @@
+{
+	"author": "Günter Baumgart",
+	"name": "xace",
+	"version": "0.2.13",
+	"description": "ACE Editor for xide",
+	"keywords": [
+		"xide",
+		"dojo",
+		"dojo2"
+	],
+	"authors": [
+	],
+	"main": "xace.js",
+	"homepage": "http://dojotoolkit.org/",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/gbaumgart/xace.git"
+	},
+	"dependencies": {
+	},
+	"ignore": [
+		"tests",
+		"aceBuild",
+		"ace",
+		"out",
+		"node_modules"
+	],
+	"license": [ "BSD-3-Clause" ],
+	"moduleType": [ "amd" ]
+}
