@@ -358,12 +358,14 @@ define([
                     VISIBILITY = types.ACTION_VISIBILITY;
 
 
+                /*
                 actions.push(this.createAction({
                     label: 'Reload',
                     command: ACTION.RELOAD,
                     icon: ICON.RELOAD,
                     keycombo: 'ctrl r'
                 }));
+                */
 
 
                 actions.push(this.createAction({
