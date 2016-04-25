@@ -20,8 +20,8 @@ define([
     var EditorInterfaceImplementation = dcl(_AceMultiDocs, {
         declaredClass: 'xace/views/EditorInterface',
         editorSession: null,
+        _lastValue:null,
         enableMultiDocuments: function () {
-            console.log('add file completer');
             var completer = this.addFileCompleter();
             var text = "var xxxTop = 2*3;";
             var path = "asdf.js";
@@ -231,17 +231,21 @@ define([
         getOptions: function () {
             return this.options;
         },
-        onContentChange: function () {
+        onContentChange: function (value) {
 
         },
         onDidChange: function () {
-            this.onContentChange(this.get('value') !== this.lastSavedContent);
+            var value = this.get('value');
+            if(this._lastValue!==value){
+                this._lastValue = value;
+                this._emit('change',value);
+                this.onContentChange(value);
+            }
         },
         getDefaultOptions: function (value, mixin) {
             var thiz = this;
             return utils.mixin({
                 region: "center",
-                /*value: value,*/
                 style: "margin: 0; padding: 0; position:relative;overflow: auto;height:inherit;width:inherit;text-align:left;",
                 readOnly: false,
                 tabSize: 2,
@@ -255,7 +259,6 @@ define([
                 showInvisibles: false,
                 displayIndentGuides: true,
                 useSoftTabs: true,
-                //className: 'editor-ace ace_editor',
                 fileName: 'none',
                 mode: 'javascript',
                 value: value || this.value || 'No value',
@@ -275,17 +278,18 @@ define([
                     // set editor.$blockScrolling = Infinity to disable this message
                     _editor.$blockScrolling = Infinity;
                 },
-
                 onDidChange: function () {
-                    thiz.onContentChange(thiz.get('value') !== thiz.lastSavedContent);
+                    var value = thiz.get('value');
+                    if(value!==thiz.lastSavedContent) {
+                        thiz.onContentChange(value);
+                    }
                 },
                 onPrefsChanged: function () {
                     thiz.setPreferences && thiz.setPreferences();
                 }
-            }, mixin || {});
+            }, mixin);
         },
         getEditor: function (index) {
-
             if (this.split) {
                 return index == null ? this.split.getCurrentEditor() : this.split.getEditor(index != null ? index : 0);
             } else if (this.editor) {
@@ -295,12 +299,12 @@ define([
         resize: function (what, target, event) {
             var options = this.options || {};
 
+            this.onResize && this.onResize();
+
             function _resize() {
                 var editor = this.getEditor(),
                     widget = this.split || this.editor;
-
                 if (!editor || !this.aceNode || !editor.container) {
-                    console.error('invalid DOM! ' + this.id + ' ' + this.value);
                     this['resize_debounced'].cancel();
                     this['resize_debounced'] = null;
                     return;
@@ -308,15 +312,13 @@ define([
                 editor && utils.resizeTo(editor.container, this.aceNode, true, true);
                 return widget ? widget.resize() : null;
             }
-
             return this.debounce('resize', _resize.bind(this), options.resizeDelay || 300, null);
-
+            //_resize().bind(this);
         },
         getAce: function () {
             return this.getEditor();
         },
         addBasicCommands: function (editor) {
-
             editor = editor || this.getEditor();
             var thiz = this;
             editor.commands.addCommands([

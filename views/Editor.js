@@ -1,7 +1,6 @@
 /** @module xace/views/Editor **/
 define([
     'dcl/dcl',
-    'dcl/inherited',
     'xide/types',
     'xide/utils',
     'xide/mixins/ActionProvider',
@@ -10,12 +9,9 @@ define([
     'xide/action/Toolbar',
     "xide/mixins/PersistenceMixin"
 
-
-], function (dcl,inherited,types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
-
+], function (dcl,types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
 
     var Persistence = dcl([PersistenceMixin.dcl], {
-
         declaredClass:'xace.views.EditorPersistence',
         defaultPrefenceTheme: 'idle_fingers',
         defaultPrefenceFontSize: 14,
@@ -63,7 +59,6 @@ define([
             return _super;
         }
     });
-
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
@@ -107,37 +102,25 @@ define([
              * @member iconClassNormal {string}
              */
             iconClassNormal:'fa-code',
-            //////////////////////////////////////////////////////////////////
-            //
-            //
-            //
             templateString: '<div attachTo="template" class="grid-template widget" style="width: 100%;height: 100%;overflow: hidden !important;position: relative;padding: 0px;margin: 0px">' +
             '<div attachTo="header" class="view-header row bg-opaque" style="height: auto;"></div>' +
             '<div attachTo="aceNode" class="view-body row" style="height:100%;width: 100%;position: relative;"></div>' +
-            '<div attachTo="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div>' +
-            '</div>',
+            '<div attachTo="footer" class="view-footer" style="position: absolute;bottom: 0px;width: 100%"></div></div>',
             getContent:function(item,onSuccess,onError){
-
                 if(!this.storeDelegate){
-
                     onError && onError('Editor::getContent : Have no store delegate!');
                 }else{
-                    var _cb=function(content){
+                    this.storeDelegate.getContent(function(content){
                         onSuccess(content);
-                    };
-
-                    this.storeDelegate.getContent(_cb,item||this.item);
+                    },item||this.item);
                 }
             },
             saveContent:function(value,onSuccess,onError){
-
                 var thiz=this;
-
                 this.set('iconClass', 'fa-spinner fa-spin');
-
                 var _value = value || this.get('value');
                 if(!_value){
-                    console.log('Editor::saveContent : Have nothing to save, editor seems empty');
+                    console.warn('Editor::saveContent : Have nothing to save, editor seems empty');
                 }
                 if(!this.storeDelegate){
                     if(onError){
@@ -145,32 +128,26 @@ define([
                     }
                     return false;
                 }else{
-                    var _s = function(){
-
+                    return this.storeDelegate.saveContent(_value,function(){
                         thiz.set('iconClass',thiz.iconClassNormal);
                         thiz.lastSavedContent=_value;
                         thiz.onContentChange(false);
-
                         var struct = {
                             path:thiz.options.filePath,
                             item:thiz.item,
                             content:_value,
                             editor:thiz
                         };
-
                         thiz.publish(types.EVENTS.ON_FILE_CONTENT_CHANGED,struct,thiz);
-                    };
-                    return this.storeDelegate.saveContent(_value,_s,null,thiz.item);
+                    },null,thiz.item);
                 }
             },
             addCommands: function () {
-
                 var aceEditor = this.getAce(),
                     thiz = this;
 
                 var config = ace.require("ace/config");
                 config.init();
-
                 var commands = [];
                 if (this.hasHelp) {
                     commands.push({
@@ -181,7 +158,6 @@ define([
                         }
                     });
                 }
-
                 if (this.hasConsole) {
                     commands.push({
                         name: "gotoline",
@@ -200,20 +176,22 @@ define([
                         readOnly: true
                     });
                 }
-
-
                 aceEditor.commands.addCommands(commands);
-
-
             },
             getWebRoot: function () {
-                var webRoot = this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
-                return webRoot;
+                return this.ctx.getResourceManager().getVariable(types.RESOURCE_VARIABLES.APP_URL);
             },
             resize:function(){
-
+                return this._resize();
+            },
+            onResize:function(){
+                return this._resize();
+            },
+            _resize:function(){
 
                 var parent = this.getParent();
+                //console.log('resize editor');
+
                 if(!this._isMaximized) {
                     parent && utils.resizeTo(this, parent, true, true);
                 }else{

@@ -319,8 +319,16 @@ define([
                             this.diffGutter.style.left = i * editorWidth + "px";
                             /*this.diffGutter.style.height = height + "px";*/
                         }
-                        editor.container.style.height = height + "px";
+
+                        //editor.container.style.height = height + "px";
+                        if(!height){
+                            return;
+                        }
+                        $(editor.container).css('height',height + "px");
+                        var cNode = $(editor.container).find('.ace_content');
                         editor.resize();
+                        cNode.css('height',height + "px");
+
                     }
                 } else {
                     var editorHeight = height / this.$splits;
