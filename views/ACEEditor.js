@@ -6,7 +6,7 @@ define([
     'xide/types',
     'xide/widgets/TemplatedWidgetBase',
     'xace/views/_Split',
-    'xide/action/DefaultActions',
+    'xaction/DefaultActions',
     'xace/views/_AceMultiDocs'
 
 ], function (dcl, has, domConstruct,utils, types, TemplatedWidgetBase, Splitter, DefaultActions, _AceMultiDocs) {

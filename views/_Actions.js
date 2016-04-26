@@ -4,11 +4,10 @@ define([
     'xide/utils',
     'xide/types',
     'xide/types/Types', //  <--important fof build
-    'xide/mixins/ActionProvider',
+    'xaction/ActionProvider',
     'xace/views/ACEEditor',
-    'xide/action/Toolbar',
-    'xide/action/DefaultActions'
-
+    'xaction/Toolbar',
+    'xaction/DefaultActions'
 
 ], function (dcl, utils, types, iTypes, ActionProvider,
              ACEEditor,

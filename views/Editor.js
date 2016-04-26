@@ -3,10 +3,10 @@ define([
     'dcl/dcl',
     'xide/types',
     'xide/utils',
-    'xide/mixins/ActionProvider',
+    'xaction/ActionProvider',
     'xace/views/ACEEditor',
     'xace/views/_Actions',
-    'xide/action/Toolbar',
+    'xaction/Toolbar',
     "xide/mixins/PersistenceMixin"
 
 ], function (dcl,types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){

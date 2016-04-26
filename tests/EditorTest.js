@@ -9,7 +9,7 @@ define([
     "module",
     'xace/views/ACEEditor',
     'xace/views/Editor',
-    'xide/action/DefaultActions',
+    'xaction/DefaultActions',
     'dojo/has!ace-formatters?xide/editor/ace/formatters'
 
 ], function (dcl,declare,types,utils,factory,
