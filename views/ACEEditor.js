@@ -8,7 +8,6 @@ define([
     'xace/views/_Split',
     'xaction/DefaultActions',
     'xace/views/_AceMultiDocs'
-
 ], function (dcl, has, domConstruct,utils, types, TemplatedWidgetBase, Splitter, DefaultActions, _AceMultiDocs) {
 
     var _loadedModes = {};//global cache for loaded modes
@@ -534,10 +533,7 @@ define([
             }
         }
     });
-
-
     var Module = dcl([containerClass, EditorClass, EditorInterfaceImplementation], {});
-
     Module.EditorImplementation = EditorInterfaceImplementation;
     Module.Editor = EditorClass;
     Module.Container = containerClass;

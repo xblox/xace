@@ -14,6 +14,10 @@ function copyOnly(mid) {
 }
 
 var profile = {
+    packages: [{
+        name:"xace",
+        location:"xace"
+    }],
     // basePath is relative to the directory containing this profile file; in this case, it is being set to the
     // src/ directory, which is the same place as the baseUrl directory in the loader configuration. (If you change
     // this, you will also need to update run.js).
@@ -59,7 +63,7 @@ var profile = {
         // This is the main loader module. It is a little special because it is treated like an AMD module even though
         // it is actually just plain JavaScript. There is some extra magic in the build system specifically for this
         // module ID.
-        'xideve/xideve': {
+        'xace/xace': {
             // In addition to the loader (dojo/dojo) and the loader configuration file (app/run), we’re also including
             // the main application (app/main) and the dojo/i18n and dojo/domReady modules because they are one of the
             // conditional dependencies in app/main (the other being app/Dialog) but we don’t want to have to make
@@ -68,12 +72,7 @@ var profile = {
             // bunch of stuff we don’t want or need. We want the initial script load to be as small and quick as
             // possible, so we configure it as a custom, bootable base.
             include: [
-                'xideve/types',
-                'xideve/views/VisualEditor',
-                'xideve/Embedded',
-                'xide/widgets/ExpressionJavaScript',
-                'xideve/manager/WidgetManager',
-                'xideve/manager/ContextManager'
+                'xace/main'
             ],
             boot: false,
             customBase: false
@@ -108,13 +107,13 @@ var profile = {
         test: function (filename, mid) {
             if(filename){
 
-                if(filename.indexOf('xace/ace')!=-1 || filename.indexOf('xace/aceBuild')!=-1|| filename.indexOf('xace/tests')!=-1){
-
+                if(filename.indexOf('xace/ace')!=-1 ||
+                    filename.indexOf('xace/aceBuild')!=-1||
+                    filename.indexOf('xace/docs')!=-1||
+                    filename.indexOf('xace/tests')!=-1){
                     return true;
                 }
-
             }
-
             return false;
         },
 

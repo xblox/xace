@@ -1,15 +1,9 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang"
-
 ], function (declare,lang) {
-
-
-
         'use strict';
-
         var Range = null;//ace.require('ace/range').Range;
-
         var C = {
             DIFF_EQUAL: 0,
             DIFF_DELETE: -1,
@@ -1144,6 +1138,4 @@ define([
             this.diff();
         }
     });
-
-
 });

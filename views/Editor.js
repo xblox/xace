@@ -8,7 +8,6 @@ define([
     'xace/views/_Actions',
     'xaction/Toolbar',
     "xide/mixins/PersistenceMixin"
-
 ], function (dcl,types,utils,ActionProvider,ACEEditor,_Actions,Toolbar,PersistenceMixin){
 
     var Persistence = dcl([PersistenceMixin.dcl], {
