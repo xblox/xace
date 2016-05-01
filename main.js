@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/kernel",
-    "xace/view/Editor"
+    "xace/views/ACEEditor",
+    "xace/views/Editor"
 ], function(){
-    return dojo.xideve;
+    return dojo.xace;
 });
