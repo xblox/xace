@@ -42,16 +42,13 @@ define([
          * -
          **/
         toPreferenceId: function (prefix) {
-            prefix = prefix || ($('body').hasClass('xTheme-transparent') ? 'xTheme-transparent' : 'xTheme-white' );
+            prefix = prefix || ($('body').hasClass('xTheme-transparent') ? 'xTheme-transparent' : 'xTheme-white');
             return (prefix || this.cookiePrefix || '') + '_xace';
         },
         getDefaultOptions: function () {
-
             //take our defaults, then mix with prefs from store,
             var _super = this.inherited(arguments),
-
                 _prefs = this.loadPreferences(null);
-
             (_prefs && utils.mixin(_super, _prefs) ||
                 //else store defaults
             this.savePreferences(this.getDefaultPreferences()));

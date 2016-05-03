@@ -357,20 +357,21 @@ define([
                     bindKey: "Ctrl-+",
                     exec: function (editor) {
                         editor.setFontSize(editor.getFontSize() + 1);
-                        thiz.onPrefsChanged();
+                        thiz.onAfterAction();
                     }
                 }, {
                     name: "decreaseFontSize",
                     bindKey: "Ctrl+-",
                     exec: function (editor) {
                         editor.setFontSize(editor.getFontSize() - 1);
-                        thiz.onPrefsChanged();
+                        thiz.onAfterAction();
                     }
                 }, {
                     name: "resetFontSize",
                     bindKey: "Ctrl+0",
                     exec: function (editor) {
                         editor.setFontSize(12);
+                        thiz.onAfterAction();
                     }
                 }
             ]);
