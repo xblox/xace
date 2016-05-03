@@ -21,6 +21,7 @@ define([
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
         LAYOUT = 'View/Layout',
+        SPLIT_MODE = types.VIEW_SPLIT_MODE,
         DEFAULT_PERMISSIONS = [
             ACTION.RELOAD,
             ACTION.SAVE,
@@ -54,12 +55,12 @@ define([
                         this.doDiff();
                         return;
                     }
-                    var isSplit = mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL || mode == types.VIEW_SPLIT_MODE.SPLIT_VERTICAL;
+                    var isSplit = mode == SPLIT_MODE.SPLIT_HORIZONTAL || mode == SPLIT_MODE.SPLIT_VERTICAL;
                     var _ed = this.getEditor();
                     var sp = this.split;
                     if (isSplit) {
                         var newEditor = (sp.getSplits() == 1);
-                        sp.setOrientation(mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL ? sp.BELOW : sp.BESIDE);
+                        sp.setOrientation(mode == SPLIT_MODE.SPLIT_HORIZONTAL ? sp.BELOW : sp.BESIDE);
                         sp.setSplits(2);
                         if (newEditor) {
                             var session = sp.getEditor(0).session;
@@ -76,7 +77,7 @@ define([
             },
             onMaximized: function (maximized) {
                 var parent = this.getParent();
-                if (maximized == false) {
+                if (maximized === false) {
                     if (parent && parent.resize) {
                         parent.resize();
                     }
@@ -89,7 +90,7 @@ define([
                         $(toolbar.domNode).removeClass('bg-opaque');
                     }
                 }
-                if (maximized == false) {
+                if (maximized === false) {
                     this.resize();
                     parent && utils.resizeTo(this, parent, true, true);
                     this.publish(types.EVENTS.ON_VIEW_MAXIMIZE_END);
@@ -447,9 +448,9 @@ define([
                         group: "View"
                     }));
                     //layout
-                    actions.push(_createSettings('None', 'View/Layout/None', 'fa-columns', types.VIEW_SPLIT_MODE.SOURCE, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
-                    actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
-                    actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('None', 'View/Layout/None', 'fa-columns', SPLIT_MODE.SOURCE, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', SPLIT_MODE.SPLIT_VERTICAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
                     //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
                 }
                 return actions;

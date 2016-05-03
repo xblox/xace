@@ -408,14 +408,10 @@ define([
         },
         createEditor: function (_options, value) {
             this.set('iconClass', this.iconClassNormal);
+
             if (this.editor || this.split) {
                 return this.editor || this.split;
             }
-            ///////////////////////////////////////////////////////////////////
-            //
-            //  Build Options
-            //
-            //
             var settings = this.getPreferences ? this.getPreferences() : {};
             var options = this.getDefaultOptions(value);
 
@@ -424,11 +420,7 @@ define([
             //apply settings from persistence store
             utils.mixin(options, settings);
             options.mode = this._getMode(options.fileName);
-            ///////////////////////////////////////////////////////////////////
-            //
-            //  DOM & ACE
-            //
-            //
+
             var node = options.targetNode || domConstruct.create('div');
             $(node).css({
                 padding: "0",
@@ -517,7 +509,6 @@ define([
             if (this.value != null) {
                 createEditor(null, this.value);
             } else {
-
                 //we have no content yet, call in _TextEditor::getContent, this will be forwarded
                 //to our 'storeDelegate'
                 this.getContent(
@@ -540,5 +531,4 @@ define([
     Module.Container = containerClass;
     Module.Splitter = Splitter;
     return Module;
-
 });
