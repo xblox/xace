@@ -42,7 +42,16 @@ define([
          * -
          **/
         toPreferenceId: function (prefix) {
-            prefix = prefix || ($('body').hasClass('xTheme-transparent') ? 'xTheme-transparent' : 'xTheme-white');
+            prefix = prefix;
+            if(!prefix){
+                var body = $('body'), prefix = 'xTheme-',search;
+                _.each(['blue','gray','white','transparent'],function(theme){
+                    search   = prefix + theme
+                    if(body.hasClass(search)){
+                        prefix = search;
+                    }
+                });
+            }
             return (prefix || this.cookiePrefix || '') + '_xace';
         },
         getDefaultOptions: function () {
@@ -63,7 +72,6 @@ define([
             getBreadcrumbPath:function(){
                 if(this.item){
                     return {
-                        //root:utils.replaceAll('/','',this.item.mount),
                         path:utils.replaceAll('/','',this.item.mount) + ':/' + this.item.path.replace('./','/')
                     }
                 }
@@ -184,10 +192,7 @@ define([
                 return this._resize();
             },
             _resize:function(){
-
                 var parent = this.getParent();
-                //console.log('resize editor');
-
                 if(!this._isMaximized) {
                     parent && utils.resizeTo(this, parent, true, true);
                 }else{
@@ -210,7 +215,7 @@ define([
                 }else{
                     if(toolbar) {
                         toolbar.resize();
-                        var $toolbar = $(toolbar.domNode);
+                        //var $toolbar = $(toolbar.domNode);
                         //topOffset = $toolbar.position().top + $toolbar.outerHeight(true);
                     }
                 }
@@ -223,7 +228,6 @@ define([
                 if(toolbar){
                     finalHeight-=4;
                 }
-
                 if (finalHeight > 50) {
                     aceNode.height(finalHeight + 'px');
                 } else {
@@ -244,15 +248,11 @@ define([
                 if(what==='value'){
                     var self = this,
                         editor = self.getEditor(),
-
                         session = editor ? editor.session : null;
-
                         return session ? session.getValue() : null;
-
                 }
                 return this.inherited(arguments);
             }
-
         });
 
     //pass through defaults
