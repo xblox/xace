@@ -9,10 +9,7 @@ define([
     'xaction/Toolbar',
     'xaction/DefaultActions'
 
-], function (dcl, utils, types, iTypes, ActionProvider,
-             ACEEditor,
-             Toolbar, DefaultActions) {
-
+], function (dcl, utils, types, Types, ActionProvider,ACEEditor,Toolbar, DefaultActions) {
 
     var ACTION = types.ACTION,
         EDITOR_SETTINGS = 'Editor/Settings',
@@ -24,9 +21,7 @@ define([
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
         LAYOUT = 'View/Layout',
-
         DEFAULT_PERMISSIONS = [
-
             ACTION.RELOAD,
             ACTION.SAVE,
             ACTION.FIND,
@@ -41,10 +36,7 @@ define([
             EDITOR_SETTINGS,
             ACTION.FULLSCREEN,
             LAYOUT
-
         ];
-
-
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
      @class module:xgrid/Base
@@ -56,21 +48,16 @@ define([
 
             },
             setSplitMode: function (mode) {
-
-
                 this.splitMode = mode;
-
                 if (!this.doSplit) {
                     if (mode == 'Diff') {
                         this.doDiff();
                         return;
                     }
-
                     var isSplit = mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL || mode == types.VIEW_SPLIT_MODE.SPLIT_VERTICAL;
                     var _ed = this.getEditor();
                     var sp = this.split;
                     if (isSplit) {
-
                         var newEditor = (sp.getSplits() == 1);
                         sp.setOrientation(mode == types.VIEW_SPLIT_MODE.SPLIT_HORIZONTAL ? sp.BELOW : sp.BESIDE);
                         sp.setSplits(2);
@@ -80,54 +67,38 @@ define([
                             newSession.name = session.name;
                             var options = _ed.getOptions();
                             sp.getEditor(1).setOptions(options);
-
-
                         }
                     } else {
                         sp.setSplits(1);
                         this.onSingleView();
                     }
                 }
-
             },
-
             onMaximized: function (maximized) {
-
                 var parent = this.getParent();
                 if (maximized == false) {
                     if (parent && parent.resize) {
                         parent.resize();
                     }
                 }
-
                 var toolbar = this.getToolbar();
                 if (toolbar) {
-
                     if (maximized) {
                         $(toolbar.domNode).addClass('bg-opaque');
                     } else {
                         $(toolbar.domNode).removeClass('bg-opaque');
                     }
                 }
-
-
                 if (maximized == false) {
                     this.resize();
                     parent && utils.resizeTo(this, parent, true, true);
                     this.publish(types.EVENTS.ON_VIEW_MAXIMIZE_END);
-                } else {
-
                 }
-
-
-                //this.publish(types.EVENTS.RESIZE, null, 1500);
                 this.getEditor().focus();
-
             },
             maximize: function () {
                 var node = this.domNode,
                     $node = $(node),
-                    thiz = this,
                     _toolbar = this.getToolbar();
 
                 if (!this._isMaximized) {
@@ -170,7 +141,6 @@ define([
                     if (_toolbar) {
                         _toolbar._follow();
                     }
-
                 }
                 this.onMaximized(this._isMaximized);
                 return true;
@@ -206,7 +176,6 @@ define([
                     self.setSplitMode(action.option, null);
                 }
 
-
                 switch (command) {
                     case INCREASE_FONT_SIZE:
                     {
@@ -234,11 +203,9 @@ define([
                     }
                     case ACTION.FIND:
                     {
-
                         var net = ace.require("ace/lib/net");
                         var webRoot = this.getWebRoot();
                         var sb = editor.searchBox;
-
                         function _search(sb) {
                             var shown = self._searchBoxOpen;
                             if (!shown) {
@@ -249,7 +216,6 @@ define([
                                 self._searchBoxOpen = false;
                             }
                         }
-
                         if (sb) {
                             _search(sb);
                         } else {
@@ -258,9 +224,7 @@ define([
                                 _search(new sbm.SearchBox(editor));
                             });
                         }
-
                         return true;
-
                     }
                 }
 
@@ -268,22 +232,20 @@ define([
                 if (command.indexOf(EDITOR_THEMES) !==-1) {
                     self.set('theme', action.theme);
                     var parentAction = action.getParent ?  action.getParent() : null;
-                    action._originEvent = 'change';
+                    //action._originEvent = 'change';
                     if(parentAction) {
-                        //parentAction.set('icon', action.get('icon'));
                         var rendererActions = parentAction.getChildren();
                         _.each(rendererActions, function (child) {
                             child.set('icon', child._oldIcon);
                         });
                     }
                     action.set('icon', 'fa fa-check');
-
                 }
 
-                if (command.indexOf(KEYBOARD) != -1) {
-
-                    var option = action.option;
-                    var keybindings = {
+                /*
+                if (command.indexOf(KEYBOARD) !==-1) {
+                    var option = action.option,
+                        keybindings = {
                         ace: null, // Null = use "default" keymapping
                         vim: ace.require("ace/keyboard/vim").handler,
                         emacs: "ace/keyboard/emacs"
@@ -291,26 +253,16 @@ define([
                     editor.setKeyboardHandler(keybindings[action.option]);
                     return true;
                 }
+                */
 
-
-                if (command.indexOf(EDITOR_SETTINGS) != -1) {
-
-
+                if (command.indexOf(EDITOR_SETTINGS) !==-1) {
                     var key = action.option,
                         option = editor.getOption(action.option),
-
                         isBoolean = _.isBoolean(option);
-
-
-                    if (option == null) {
-                        //console.error('option does not exists! ' + action.option);
-                    }
-
                     if (key === 'highlightActive') {
                         editor.setHighlightActiveLine(!editor.getHighlightActiveLine());
                         return;
                     }
-
                     if (isBoolean) {
                         editor.setOption(action.option, !option);
                     } else {
@@ -319,14 +271,6 @@ define([
                             this.set('wordWrap', !mode);
                             return true;
                         }
-                        /*
-                         if(key==='printMargin'){
-                         var mode = session.getShowPrintMargin();
-                         this.set('wordWrap',!mode);
-                         return
-                         }
-                         */
-
                         if (option === 'off' || option === 'on') {
                             editor.setOption(key, option === 'off' ? 'on' : 'off');
                         } else {
@@ -343,11 +287,9 @@ define([
                 var actions = [],
                     self = this,
                     ACTION = types.ACTION,
-                    ICON = types.ACTION_ICON,
-                    VISIBILITY = types.ACTION_VISIBILITY;
+                    ICON = types.ACTION_ICON;
 
-
-                /*
+                /* @TODO: reactivate reload action
                 actions.push(this.createAction({
                     label: 'Reload',
                     command: ACTION.RELOAD,
@@ -413,15 +355,12 @@ define([
                     self._addThemes && self._addThemes(actions);
                 }
 
-
                 actions.push(this.createAction({
                     label: 'Help',
                     command: EDITOR_HELP,
                     icon: 'fa-question',
                     keycombo: 'f1'
                 }));
-
-
 
                 ///editor settings
                 actions.push(this.createAction({
@@ -432,15 +371,10 @@ define([
                 }));
 
                 function _createSettings(label, command, icon, option, mixin, group, actionType, params) {
-
                     command = command || EDITOR_SETTINGS + '/' + label;
-
                     mixin = mixin || {};
-
                     command = command || EDITOR_SETTINGS + '/' + label;
-
                     mixin = mixin || {};
-
                     var action = self.createAction(utils.mixin({
                         label: label,
                         command: command,
@@ -453,7 +387,6 @@ define([
                             owner: self
                         }, mixin)
                     }, params));
-
                     actions.push(action);
                     return action;
                 }
@@ -519,13 +452,9 @@ define([
                     actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', types.VIEW_SPLIT_MODE.SPLIT_VERTICAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
                     //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
                 }
-
-
                 return actions;
-
             },
             _addThemes: function (actions) {
-
                 var themes = this.getThemeData(),
                     thiz = this;
 
@@ -553,26 +482,17 @@ define([
                 for (var i = 0; i < themes.length; i++) {
                     var data = themes[i];
                     var name = data[1] || data[0].replace(/ /g, "_").toLowerCase();
-                    var theme = creatorFn(data[0], ' ', name);
+                    var theme = creatorFn(data[0], ' ', name);//@TODO: _MenuMixin not creating icon node, use white space for now
                     actions.push(theme);
                 }
             },
-
-            ////////////////////////////////////////////////
-            //
-            //  methods - Action
-            //
-            //
             showHelp: function (editor) {
-
                 editor = editor || this.getEditor();
-
                 var config = ace.require("ace/config");
                 config.loadModule("ace/ext/keybinding_menu", function (module) {
                     module.init(editor);
                     editor.showKeyboardShortcuts();
                 });
-
             },
             getThemeData: function () {
                 return [
@@ -614,10 +534,6 @@ define([
             }
         }
     );
-
-
     Module.DEFAULT_PERMISSIONS = DEFAULT_PERMISSIONS;
-
     return Module;
-
 });
