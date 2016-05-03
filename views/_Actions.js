@@ -125,15 +125,12 @@ define([
 
             },
             maximize: function () {
-
-
                 var node = this.domNode,
                     $node = $(node),
                     thiz = this,
                     _toolbar = this.getToolbar();
 
                 if (!this._isMaximized) {
-
                     this.publish(types.EVENTS.ON_VIEW_MAXIMIZE_START);
                     this._isMaximized = true;
                     var vp = $(this.domNode.ownerDocument);
@@ -144,27 +141,16 @@ define([
                     });
 
                     this._maximizeContainer = container;
-
-
                     root.appendChild(container);
-
                     $(node).addClass('AceEditorPaneFullScreen');
-
                     $(node).css('width', vp.width());
                     $(node).css('height', vp.height());
                     this.resize();
-
-
                     this._lastParent = node.parentNode;
                     container.appendChild(node);
-
-
                     $(container).addClass('bg-opaque');
-
                     $(container).css('width', vp.width());
                     $(container).css('height', vp.height());
-
-
                     $(container).css({
                         position: "absolute",
                         left: "0px",
@@ -173,16 +159,9 @@ define([
                         width: '100%',
                         height: '100%'
                     });
-
-
-                    //console.error('maximize');
-
-
                     if (_toolbar) {
                         _toolbar._unfollow(this.header);
                     }
-
-
                 } else {
                     this._isMaximized = false;
                     $node.removeClass('AceEditorPaneFullScreen');
@@ -286,8 +265,20 @@ define([
                 }
 
                 //themes
-                if (command.indexOf(EDITOR_THEMES) != -1) {
+                if (command.indexOf(EDITOR_THEMES) !==-1) {
+
                     self.set('theme', action.theme);
+                    var parentAction = action.getParent ?  action.getParent() : null;
+                    action._originEvent = 'change';
+                    if(parentAction) {
+                        //parentAction.set('icon', action.get('icon'));
+                        var rendererActions = parentAction.getChildren();
+                        _.each(rendererActions, function (child) {
+                            child.set('icon', child._oldIcon);
+                        });
+                    }
+                    action.set('icon', 'fa fa-check');
+
                 }
 
                 if (command.indexOf(KEYBOARD) != -1) {
@@ -417,7 +408,6 @@ define([
                             closeOnClick:false
                         },
                         onCreate:function(action){
-
                             var options = self.getDefaultOptions();
                             action.set('value',options.theme);
                         }
@@ -567,16 +557,17 @@ define([
                         label: label,
                         command: EDITOR_THEMES + '/' + label,
                         group: 'View',
+                        icon: icon,
                         mixin: {
                             addPermission: true,
                             value:value,
                             theme: value,
-                            closeOnClick:false,
-                            actionType : types.ACTION_TYPE.SINGLE_TOGGLE
+                            closeOnClick:false
                         },
                         onCreate:function(action) {
                             action._oldIcon = icon;
                             action.set('value', value);
+                            action.actionType = types.ACTION_TYPE.SINGLE_TOGGLE;
                         }
                     });
                 };
@@ -585,7 +576,7 @@ define([
                 for (var i = 0; i < themes.length; i++) {
                     var data = themes[i];
                     var name = data[1] || data[0].replace(/ /g, "_").toLowerCase();
-                    var theme = creatorFn(data[0], '', name);
+                    var theme = creatorFn(data[0], ' ', name);
                     actions.push(theme);
                 }
             },

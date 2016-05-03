@@ -1,6 +1,7 @@
 /** @module xgrid/Base **/
 define([
     "xdojo/declare",
+    "dcl/dcl",
     'xide/types',
     'xide/utils',
     "xide/tests/TestUtils",
@@ -8,19 +9,11 @@ define([
     'xace/views/ACEEditor',
     'xace/views/Editor'
 
-], function (declare,types,utils,
+], function (declare,dcl,types,utils,
              TestUtils,module,
              ACEEditor,
              Editor){
-
-
     console.clear();
-
-
-
-
-
-
 
     var EDITOR_SETTINGS = 'Editor/Settings',
         INCREASE_FONT_SIZE = 'View/Increase Font Size',
@@ -31,11 +24,6 @@ define([
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
         ACTION = types.ACTION;
-
-
-
-
-
     /**
      *
      * @returns {*}
@@ -365,9 +353,7 @@ define([
 
     function createEditorClass(){
 
-
-
-        return declare('Editor',Editor,{
+        return dcl(Editor,{
                 runAction:function(action){
                     return runAction.apply(this,[action]);
                 },
@@ -392,6 +378,8 @@ define([
 
         //createEditorClass()||
         var _class = createEditorClass();
+
+
 
         var editor = createACE(tab,{
             ctx:ctx,
