@@ -266,7 +266,6 @@ define([
 
                 //themes
                 if (command.indexOf(EDITOR_THEMES) !==-1) {
-
                     self.set('theme', action.theme);
                     var parentAction = action.getParent ?  action.getParent() : null;
                     action._originEvent = 'change';
@@ -356,8 +355,6 @@ define([
                     keycombo: 'ctrl r'
                 }));
                 */
-
-
                 actions.push(this.createAction({
                     label: 'Save',
                     command: ACTION.SAVE,
@@ -398,14 +395,14 @@ define([
                 }));
 
                 if (DefaultActions.hasAction(permissions, EDITOR_THEMES)) {
-
                     actions.push(this.createAction({
                         label: 'Themes',
                         command: EDITOR_THEMES,
                         icon: 'fa-paint-brush',
                         group: 'View',
                         mixin:{
-                            closeOnClick:false
+                            closeOnClick:false,
+                            value:this.defaultPrefenceTheme
                         },
                         onCreate:function(action){
                             var options = self.getDefaultOptions();
@@ -459,31 +456,15 @@ define([
 
                     actions.push(action);
                     return action;
-
                 }
-
-
                 var _params = {
                     onCreate: function (action) {
-
-                        var options = self.getOptionsMixed();
-                        var option = this.option;
-
-                        var optionValue = options[option];
-
-                        //console.error('on Create ' + optionValue);
-
-                        //console.error('on Create ' + option + ' = ' +optionValue);
+                        var optionValue = self.getOptionsMixed()[this.option];
                         if (optionValue !== null) {
                             action.set('value', optionValue);
                         }
-
                     },
                     onChange: function (property, value) {
-
-                        //console.error('on change ' + property + ' | ' + value);
-                        //this.set('value',value);
-                        var option = this.option;
                         this.value = value;
                         self.runAction(this);
                     }
@@ -494,17 +475,13 @@ define([
                 _createSettings('Show Print Margin', null, null, 'showPrintMargin', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
                 _createSettings('Display Intend Guides', null, null, 'displayIndentGuides', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
                 _createSettings('Show Line Numbers', null, null, 'showLineNumbers', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
-
                 _createSettings('Show Indivisibles', null, null, 'showInvisibles', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
-
                 _createSettings('Use Soft Tabs', null, null, 'useSoftTabs', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
                 _createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
-
                 //_createSettings('Use Elastic Tab Stops', null, null, 'useElasticTabstops');
                 _createSettings('Animated Scroll', null, null, 'animatedScroll', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
                 _createSettings('Word Wrap', null, null, 'wordWrap', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
                 _createSettings('Highlight Active Line', null, null, 'highlightActive', null, null, types.ACTION_TYPE.MULTI_TOGGLE, _params);
-
 
                 /*
                  var keybindings = {
