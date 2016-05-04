@@ -4,12 +4,13 @@ define([
     'xide/utils',
     'xide/types',
     'xide/types/Types', //  <--important fof build
+    'xaction/types', //  <--important fof build
     'xaction/ActionProvider',
     'xace/views/ACEEditor',
     'xaction/Toolbar',
     'xaction/DefaultActions'
 
-], function (dcl, utils, types, Types, ActionProvider,ACEEditor,Toolbar, DefaultActions) {
+], function (dcl, utils, types, Types,aTypes,ActionProvider,ACEEditor,Toolbar, DefaultActions) {
 
     var ACTION = types.ACTION,
         EDITOR_SETTINGS = 'Editor/Settings',
