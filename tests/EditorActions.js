@@ -86,7 +86,6 @@ define([
 
     }
     function doEditorTests(editor){
-        //editor.showToolbar(false);
         ctx.getWindowManager().registerView(editor,true);
     }
 
@@ -399,7 +398,6 @@ define([
             ],
             options:{
                 fileName:'test.js'
-                //showGutter:false,
 
             }
         },_class,null);
