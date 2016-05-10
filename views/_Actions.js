@@ -8,9 +8,10 @@ define([
     'xaction/ActionProvider',
     'xace/views/ACEEditor',
     'xaction/Toolbar',
-    'xaction/DefaultActions'
+    'xaction/DefaultActions',
+    'dojo/Deferred'
 
-], function (dcl, utils, types, Types,aTypes,ActionProvider,ACEEditor,Toolbar, DefaultActions) {
+], function (dcl, utils, types, Types,aTypes,ActionProvider,ACEEditor,Toolbar, DefaultActions,Deferred) {
 
     var ACTION = types.ACTION,
         EDITOR_SETTINGS = 'Editor/Settings',
@@ -148,8 +149,13 @@ define([
                 return true;
             },
             save: function (item) {
+                var value = this.get('value');
                 var res = this.saveContent(this.get('value'), item);
                 var thiz = this;
+                this._emit(types.EVENTS.ON_FILE_CONTENT_CHANGED,{
+                    content:value,
+                    item:item
+                });
                 setTimeout(function () {
                     var _ed = thiz.getEditor();
                     if (_ed) {
@@ -158,6 +164,23 @@ define([
                 }, 600);
 
                 return res;
+            },
+            reload:function(){
+                var self = this;
+                var dfd = new Deferred();
+                this.getContent(
+                    this.item,
+                    function (content) {//onSuccess
+                        self.lastSavedContent = content;
+                        self.set('value',content);
+                        dfd.resolve(content);
+                    },
+                    function (e) {//onError
+                        logError(e, 'error loading content from file');
+                        dfd.reject(e);
+                    }
+                );
+                return dfd;
             },
             runAction: function (action) {
 
@@ -173,12 +196,15 @@ define([
                     session = this.editorSession,
                     result = false;
 
-
                 if (command.indexOf(LAYOUT) != -1) {
                     self.setSplitMode(action.option, null);
                 }
 
                 switch (command) {
+                    case ACTION.RELOAD:
+                    {
+                        return this.reload();
+                    }
                     case INCREASE_FONT_SIZE:
                     {
                         editor.setFontSize(editor.getFontSize() + 1);
