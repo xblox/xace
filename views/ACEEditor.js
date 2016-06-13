@@ -42,7 +42,7 @@ define([
             document.body.appendChild(jsElm);
         },
         setMode: function (mode, _ctx, cb) {
-            var ctx = _ctx || this.ctx;
+            var ctx = _ctx || this.ctx || window['sctx'];
             if (ctx && ctx.getResourceManager()) {
                 var thiz = this;
                 if (!_loadedModes[mode]) {
