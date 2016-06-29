@@ -319,7 +319,14 @@ define([
         },
         addBasicCommands: function (editor) {
             editor = editor || this.getEditor();
-            var thiz = this;
+            var thiz = this,
+                whiteSpace = ace.require("ace/ext/whitespace");
+
+            this._whiteSpaceExt = whiteSpace;
+
+
+            editor.commands.addCommands(whiteSpace.commands);
+
             editor.commands.addCommands([
                 {
                     name: "gotoline",
@@ -387,6 +394,12 @@ define([
             this.addBasicCommands(editor);
             editor.setFontSize(options.fontSize);
             editor.$blockScrolling = Infinity;
+            //var a = editor.session.doc.getNewLineCharacter();
+
+            if(this._whiteSpaceExt){
+                this._whiteSpaceExt.detectIndentation(editor.session);
+            }
+
         },
         destroy: function () {
             var editor = this.getEditor();
@@ -434,7 +447,8 @@ define([
             var config = ace.require("ace/config"),
                 split = null,
                 editor = null,
-                container = null;
+                container = null,
+                langTools = ace.require("ace/ext/language_tools");
 
             try {
                 var Split = Splitter.getSplitter();
