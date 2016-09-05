@@ -135,7 +135,7 @@ define([
                     return this.storeDelegate.saveContent(_value,function(){
                         thiz.set('iconClass',thiz.iconClassNormal);
                         thiz.lastSavedContent=_value;
-                        thiz.onContentChange(false);
+                        thiz.onContentChange(_value);
                         var struct = {
                             path:thiz.options.filePath,
                             item:thiz.item,

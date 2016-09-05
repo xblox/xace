@@ -231,7 +231,9 @@ define([
             return this.options;
         },
         onContentChange: function (value) {
-
+            if(this._parent && this._parent.set){
+                this._parent.set('changed',value!==this.lastSavedContent);
+            }
         },
         onDidChange: function () {
             var value = this.get('value');
@@ -420,6 +422,7 @@ define([
             return options;
         },
         createEditor: function (_options, value) {
+
             this.set('iconClass', this.iconClassNormal);
 
             if (this.editor || this.split) {
@@ -444,19 +447,18 @@ define([
 
 
             this.aceNode.appendChild(node);
+
             var config = ace.require("ace/config"),
                 split = null,
-                editor = null,
-                container = null,
-                langTools = ace.require("ace/ext/language_tools");
-
+                editor = null;
+            ace.require("ace/ext/language_tools");
             try {
                 var Split = Splitter.getSplitter();
                 split = new Split(node, null, 1);
                 this.split = split;
                 this._aceConfig = config;
                 config.init();
-                ace.require('ace/ext/language_tools');
+                //ace.require('ace/ext/language_tools');
                 this.editor = editor = split.getEditor(0);
                 this.editorSession = this.editor.getSession();
                 if (value) {
@@ -521,6 +523,7 @@ define([
             }
 
             if (this.value != null) {
+                this.lastSavedContent = '' + this.value;
                 createEditor(null, this.value);
             } else {
                 //we have no content yet, call in _TextEditor::getContent, this will be forwarded
