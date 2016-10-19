@@ -9,11 +9,11 @@ define([
     'xace/views/ACEEditor',
     'xaction/Toolbar',
     'xaction/DefaultActions',
-    'dojo/Deferred'
+    'dojo/Deferred',
+    'xace/formatters'
+], function (dcl, utils, types, Types,aTypes,ActionProvider,ACEEditor,Toolbar, DefaultActions,Deferred,formatters) {
 
-], function (dcl, utils, types, Types,aTypes,ActionProvider,ACEEditor,Toolbar, DefaultActions,Deferred) {
-
-    var ACTION = types.ACTION,
+        var ACTION = types.ACTION,
         EDITOR_SETTINGS = 'Editor/Settings',
         INCREASE_FONT_SIZE = 'View/Increase Font Size',
         DECREASE_FONT_SIZE = 'View/Decrease Font Size',
@@ -23,6 +23,7 @@ define([
         EDITOR_CONSOLE = 'Editor/Console',
         KEYBOARD = 'Editor/Keyboard',
         LAYOUT = 'View/Layout',
+        FORMAT = 'Edit/Format',
         SPLIT_MODE = types.VIEW_SPLIT_MODE,
         DEFAULT_PERMISSIONS = [
             ACTION.RELOAD,
@@ -38,7 +39,8 @@ define([
             EDITOR_CONSOLE,
             EDITOR_SETTINGS,
             ACTION.FULLSCREEN,
-            LAYOUT
+            LAYOUT,
+            FORMAT
         ];
     /**
      * Default Editor with all extras added : Actions, Toolbar and ACE-Features
@@ -269,6 +271,15 @@ define([
                     }
                     action.set('icon', 'fa fa-check');
                 }
+                //formatters :
+                if (command.indexOf(FORMAT) !==-1) {
+
+                    console.log('run format ',action);
+                     if (editor) {
+                         var _value = formatters.format(editor, action.formatter);
+                         self.set('value',_value);
+                     }
+                }
 
                 /*
                 if (command.indexOf(KEYBOARD) !==-1) {
@@ -466,6 +477,71 @@ define([
                  _createSettings('EMacs', KEYBOARD + '/EMacs', null, 'emacs');
                  }
                  */
+                var VISIBILITY = types.ACTION_VISIBILITY;
+                if (DefaultActions.hasAction(permissions, FORMAT)) {
+                    actions.push(this.createAction({
+                        label: 'Format',
+                        command: 'Edit/Format',
+                        icon: 'fa-indent',
+                        group: "Edit"
+                    }));
+
+                    var modes = formatters.modes;
+                    var creatorFn = function (label, icon, value) {
+
+                        var head = self.createAction({
+                            label: label,
+                            command: 'Edit/Format/'+label,
+                            icon: 'fa-indent',
+                            group: "Edit",
+                            mixin:{
+                                addPermission: true,
+                                formatter:value
+                            },
+                            onCreate:function(action){
+                                /*
+                                action.setVisibility(VISIBILITY.ACTION_TOOLBAR, {label: ''}).
+                                setVisibility(VISIBILITY.MAIN_MENU, {show: false}).
+                                setVisibility(VISIBILITY.CONTEXT_MENU, null);*/
+                            }
+                        });
+
+                        actions.push(head);
+
+                        /*
+                        return Action.create(label, icon, 'Edit/Format/' + label, false, null, 'TEXT', 'viewActions', null, false, function () {
+                            formatCode(value);
+                        });
+                        */
+                    };
+
+                    for (var _f in modes) {
+                        actions.push(creatorFn(modes[_f], '', _f));
+                    }
+                    /*
+                    var format = Action.createDefault('Format', 'fa-indent', 'Edit/Format', '_a', null, {
+                        dummy: true
+                    }).setVisibility(VISIBILITY.ACTION_TOOLBAR, {label: ''}).
+                    setVisibility(VISIBILITY.MAIN_MENU, {show: false}).
+                    setVisibility(VISIBILITY.CONTEXT_MENU, null);
+
+                    this.addAction(actions,format);
+
+                    for (var _f in modes) {
+                        actions.push(creatorFn(modes[_f], '', _f));
+                    }
+                    */
+
+
+                    /*
+
+                    //layout
+                    actions.push(_createSettings('None', 'View/Layout/None', 'fa-columns', SPLIT_MODE.SOURCE, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('Horizontal', 'View/Layout/Horizontal', 'layoutIcon-horizontalSplit', SPLIT_MODE.SPLIT_HORIZONTAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    actions.push(_createSettings('Vertical', 'View/Layout/Vertical', 'layoutIcon-layout293', SPLIT_MODE.SPLIT_VERTICAL, null, 'View', types.ACTION_TYPE.SINGLE_TOGGLE));
+                    */
+                    //actions.push(_createSettings('Diff', 'View/Layout/Diff', 'fa-columns', 'Diff', null, 'View'));
+                }
 
                 if (DefaultActions.hasAction(permissions, LAYOUT)) {
                     actions.push(this.createAction({
