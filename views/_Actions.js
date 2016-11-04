@@ -3,8 +3,8 @@ define([
     'dcl/dcl',
     'xide/utils',
     'xide/types',
-    'xide/types/Types', //  <--important fof build
-    'xaction/types', //  <--important fof build
+    'xide/types/Types', //  <--important for build
+    'xaction/types', //  <--important for build
     'xaction/ActionProvider',
     'xace/views/ACEEditor',
     'xaction/Toolbar',
@@ -135,17 +135,12 @@ define([
                         width: '100%',
                         height: '100%'
                     });
-                    if (_toolbar) {
-                        _toolbar._unfollow(this.header);
-                    }
+
                 } else {
                     this._isMaximized = false;
                     $node.removeClass('AceEditorPaneFullScreen');
                     this._lastParent.appendChild(node);
                     utils.destroy(this._maximizeContainer);
-                    if (_toolbar) {
-                        _toolbar._follow();
-                    }
                 }
                 this.onMaximized(this._isMaximized);
                 return true;
@@ -164,7 +159,6 @@ define([
                         _ed.focus();
                     }
                 }, 600);
-
                 return res;
             },
             reload:function(){
