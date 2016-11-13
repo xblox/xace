@@ -179,7 +179,6 @@ define([
                 return dfd;
             },
             runAction: function (action) {
-
                 action = this.getAction(action);
                 if (!action) {
                     return false;
@@ -267,14 +266,11 @@ define([
                 }
                 //formatters :
                 if (command.indexOf(FORMAT) !==-1) {
-
-                    console.log('run format ',action);
                      if (editor) {
                          var _value = formatters.format(editor, action.formatter);
                          self.set('value',_value);
                      }
                 }
-
                 /*
                 if (command.indexOf(KEYBOARD) !==-1) {
                     var option = action.option,
@@ -633,5 +629,6 @@ define([
         }
     );
     Module.DEFAULT_PERMISSIONS = DEFAULT_PERMISSIONS;
+    dcl.chainAfter('runAction',Module);
     return Module;
 });
