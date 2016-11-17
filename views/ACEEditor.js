@@ -1,3 +1,4 @@
+/** @module xace/views/ACEEditor **/
 define([
     'dcl/dcl',
     'dojo/has',
