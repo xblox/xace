@@ -11,5 +11,5 @@
     ],
     "bugs": "https://gitlab.com/xamiro/xace/issues",
     "homepage": "http://gitlab.com/xamiro/xace",
-    "dojoBuild": "layer.profile.js"
+    "dojoBuild": "src/layer.profile.js"
 }

@@ -1,28 +1,26 @@
 define([
-    "dojo/_base/declare",
+    "dcl/dcl",
     "xide/model/Component",
     "xide/utils",
     "dojo/has",
     "require"
-], function (declare,Component,utils,has,require) {
-
+], function (declare, Component, utils, has, require) {
     /**
      * @class xideve.component
      * @extends module:xide/model/Component
      */
-    return declare('xace/component',[Component], {
+    return dcl(Component, {
+        declaredClass: 'xace/component',
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         //  Implement base interface
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
-        getDependencies:function(){
-            if(has('xace')===false){
+        getDependencies: function () {
+            if (has('xace') === false) {
                 return [];
             }
-            return [
-
-            ];
+            return [];
         },
         /**
          * @inheritDoc
@@ -33,9 +31,8 @@ define([
         /**
          * @inheritDoc
          */
-        run:function(){
+        run: function () {
             var _re = require;
-
         },
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -46,10 +43,7 @@ define([
          * Register editors and add managers to the current context
          * @callback
          */
-        onReady:function(){
-
+        onReady: function () {
         }
-
     });
 });
-

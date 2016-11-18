@@ -10,7 +10,6 @@ define([
     'xaction/DefaultActions',
     'xace/views/_AceMultiDocs'
 ], function (dcl, has, domConstruct,utils, types, TemplatedWidgetBase, Splitter, DefaultActions, _AceMultiDocs) {
-
     var _loadedModes = {};//global cache for loaded modes
     var containerClass = dcl([TemplatedWidgetBase], {
         resizeToParent: true,
@@ -519,9 +518,22 @@ define([
             if (!this.item && this.value == null) {
                 return;
             }
+
             function createEditor(options, value) {
+                /*
+                if(typeof ace === "function"){
+                    ace(function(_ace){
+                        ACE = _ace;
+                        self.createEditor(self.options || options, value);
+                    });
+                    return;
+                }
+                */
                 self.createEditor(self.options || options, value);
             }
+
+
+
 
             if (this.value != null) {
                 this.lastSavedContent = '' + this.value;

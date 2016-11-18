@@ -14,10 +14,16 @@ function copyOnly(mid) {
 }
 
 var profile = {
-    packages: [{
-        name:"xace",
-        location:"xace"
-    }],
+    packages: [
+        {
+            name:"xace",
+            location:"xace/src"
+        },
+        {
+            name:'dojo',
+            location:'dojo'
+        }
+    ],
     // basePath is relative to the directory containing this profile file; in this case, it is being set to the
     // src/ directory, which is the same place as the baseUrl directory in the loader configuration. (If you change
     // this, you will also need to update run.js).
@@ -72,7 +78,12 @@ var profile = {
             // bunch of stuff we don’t want or need. We want the initial script load to be as small and quick as
             // possible, so we configure it as a custom, bootable base.
             include: [
-                'xace/main'
+                'xace/main',
+                'xace/template.html'
+            ],
+            exclude:[
+                "dojo/dojo",
+                "dojo/text"
             ],
             boot: false,
             customBase: false
