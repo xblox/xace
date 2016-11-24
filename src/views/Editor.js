@@ -69,6 +69,9 @@ define([
      @class module:xgrid/Base
      */
     var Module = dcl([_Actions, ACEEditor, ActionProvider.dcl, Persistence, Toolbar.dcl], {
+        toolbarArgs:{
+            actionFilter:{}
+        },
         getBreadcrumbPath: function () {
             if (this.item) {
                 return {
@@ -210,16 +213,12 @@ define([
             }
 
             if (!toolbar || (toolbar && toolbar.isEmpty())) {
-                //$(thiz.header).css('display','none');
                 noToolbar = true;
             } else {
                 if (toolbar) {
-
                     utils.resizeTo(toolbar, this.header, false,true);
                     toolbar.resize();
                     utils.resizeTo(this.header,toolbar,true,false);
-                    //var $toolbar = $(toolbar.domNode);
-                    //topOffset = $toolbar.position().top + $toolbar.outerHeight(true);
                 }
             }
 
