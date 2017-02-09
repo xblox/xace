@@ -14,7 +14,7 @@
 	"homepage": "http://dojotoolkit.org/",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/gbaumgart/xace.git"
+		"url": "git://github.com/xblox/xace.git"
 	},
 	"dependencies": {
 	},
