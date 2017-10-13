@@ -210,9 +210,10 @@ define([
         },
         setOptions: function (options) {
             this.options = options;
+            var self = this;
             _.each(options, function (value, name) {
-                this.set(name, value);
-            }, this);
+                self.set(name, value);
+            });
 
             var editor = this.getEditor();
             if (editor && options.aceOptions) {
